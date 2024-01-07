@@ -29,7 +29,7 @@ class ProductVariantVersionEntity(
     val productVariantId: UUID,
     @Id
     val id: UUID?
-) {
+) : BaseEntity<ProductVariantVersion> {
 
     companion object {
         /**
@@ -38,12 +38,7 @@ class ProductVariantVersionEntity(
         val ENTITY = QProductVariantVersionEntity.productVariantVersionEntity!!
     }
 
-    /**
-     * Convert this entity to a GraphQL DTO
-     *
-     * @return GraphQL DTO
-     */
-    fun toDTO(): ProductVariantVersion {
+    override fun toDTO(): ProductVariantVersion {
         return ProductVariantVersion(
             id = id!!,
             name = name,

@@ -41,10 +41,6 @@ class ProductVariantConnection(
 ) {
 
     override val primaryKey: ComparableExpression<*> get() = ProductVariantEntity.ENTITY.id
-
-    override fun toDto(value: ProductVariantEntity): ProductVariant {
-        return value.toDTO()
-    }
 }
 
 @GraphQLDescription("ProductVariant order fields")

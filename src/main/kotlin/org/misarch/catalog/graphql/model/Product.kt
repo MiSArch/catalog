@@ -2,7 +2,9 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryConnection
 import org.misarch.catalog.graphql.model.connection.CategoryOrder
 import org.misarch.catalog.graphql.model.connection.ProductVariantConnection
@@ -14,6 +16,7 @@ import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A product.")
 class Product(
@@ -25,12 +28,11 @@ class Product(
 ) : Node(id) {
 
     @GraphQLDescription("The default variant of the product.")
-    suspend fun defaultVariant(
-        @Autowired
-        @GraphQLIgnore
-        productVariantRepository: ProductVariantRepository
-    ): ProductVariant {
-        return productVariantRepository.findById(defaultVariantId).awaitSingle().toDTO()
+    fun defaultVariant(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<ProductVariant> {
+        return dfe.getDataLoader<UUID, ProductVariant>(ProductVariantDataLoader::class.simpleName!!)
+            .load(defaultVariantId, dfe)
     }
 
     @GraphQLDescription("Get all associated ProductVariants")

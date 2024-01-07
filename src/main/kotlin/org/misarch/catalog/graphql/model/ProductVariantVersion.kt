@@ -2,7 +2,10 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
+import org.misarch.catalog.graphql.dataloader.ProductVariantVersionDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
@@ -11,6 +14,7 @@ import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A version of a ProductVariant.")
 class ProductVariantVersion(
@@ -31,12 +35,11 @@ class ProductVariantVersion(
 ) : Node(id) {
 
     @GraphQLDescription("The ProductVariant this is a version of.")
-    suspend fun productVariant(
-        @Autowired
-        @GraphQLIgnore
-        productVariantRepository: ProductVariantRepository
-    ): ProductVariant {
-        return productVariantRepository.findById(productVariantId).awaitSingle().toDTO()
+    fun productVariant(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<ProductVariant> {
+        return dfe.getDataLoader<UUID, ProductVariant>(ProductVariantDataLoader::class.simpleName!!)
+            .load(productVariantId, dfe)
     }
 
     @GraphQLDescription("Get all associated CategoryCharacteristicValues")
