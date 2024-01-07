@@ -4,7 +4,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.scalars.ID
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.graphql.dataloader.CategoryDataLoader
 import org.misarch.catalog.graphql.dataloader.ProductDataLoader
 import org.misarch.catalog.graphql.model.Category
@@ -17,7 +16,7 @@ import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
 import org.misarch.catalog.util.uuid
 import org.springframework.stereotype.Component
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**

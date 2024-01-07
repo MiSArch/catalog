@@ -3,7 +3,6 @@ package org.misarch.catalog.graphql.model
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryConnection
 import org.misarch.catalog.graphql.model.connection.CategoryOrder

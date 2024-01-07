@@ -11,7 +11,7 @@ import org.dataloader.DataLoaderFactory
 import org.dataloader.DataLoaderOptions
 import org.misarch.catalog.persistence.model.BaseEntity
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
-import java.util.UUID
+import java.util.*
 import kotlin.coroutines.EmptyCoroutineContext
 
 /**
@@ -21,7 +21,8 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param D type of the entity
  * @property repository repository to load the entities from
  */
-abstract class IdDataLoader<T, D : BaseEntity<T>>(private val repository: ReactiveCrudRepository<D, UUID>) : KotlinDataLoader<UUID, T> {
+abstract class IdDataLoader<T, D : BaseEntity<T>>(private val repository: ReactiveCrudRepository<D, UUID>) :
+    KotlinDataLoader<UUID, T> {
     override val dataLoaderName: String
         get() = this::class.simpleName!!
 

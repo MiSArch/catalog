@@ -1,13 +1,8 @@
 package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.reactor.awaitSingle
-import org.misarch.catalog.graphql.dataloader.CategoryCharacteristicDataLoader
 import org.misarch.catalog.graphql.dataloader.CategoryDataLoader
-import org.misarch.catalog.persistence.repository.CategoryRepository
-import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

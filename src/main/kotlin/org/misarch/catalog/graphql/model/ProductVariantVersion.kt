@@ -3,14 +3,11 @@ package org.misarch.catalog.graphql.model
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
-import org.misarch.catalog.graphql.dataloader.ProductVariantVersionDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
-import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.util.*
