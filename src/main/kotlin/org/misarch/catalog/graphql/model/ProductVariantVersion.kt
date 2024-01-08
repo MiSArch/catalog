@@ -2,6 +2,8 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.federation.directives.FieldSet
+import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
@@ -14,6 +16,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A version of a ProductVariant.")
+@KeyDirective(fields = FieldSet("id"))
 class ProductVariantVersion(
     id: UUID,
     @property:GraphQLDescription("The name of the ProductVariantVersion.")

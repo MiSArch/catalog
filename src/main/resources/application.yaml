@@ -8,3 +8,5 @@ spring:
     locations: classpath:db/migration
 graphql:
   packages: org.misarch.catalog
+  federation:
+    enabled: true

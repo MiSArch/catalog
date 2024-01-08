@@ -2,6 +2,8 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.federation.directives.FieldSet
+import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicOrder
 import org.misarch.catalog.graphql.model.connection.ProductConnection
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @GraphQLDescription("A category")
+@KeyDirective(fields = FieldSet("id"))
 class Category(
     id: UUID,
     @property:GraphQLDescription("The name of the category.")

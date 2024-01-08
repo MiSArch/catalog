@@ -1,6 +1,7 @@
 package org.misarch.catalog.graphql.model.connection
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
@@ -23,6 +24,7 @@ import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRep
  * @param applyJoin A function to apply a join to the query
  */
 @GraphQLDescription("A connection to a list of `CategoryCharacteristicValue` values.")
+@ShareableDirective
 class CategoryCharacteristicValueConnection(
     first: Int?,
     skip: Int?,
