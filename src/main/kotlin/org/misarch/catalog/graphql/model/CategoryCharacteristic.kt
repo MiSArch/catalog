@@ -1,11 +1,10 @@
 package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import kotlinx.coroutines.reactor.awaitSingle
-import org.misarch.catalog.persistence.repository.CategoryRepository
-import org.springframework.beans.factory.annotation.Autowired
+import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.dataloader.CategoryDataLoader
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A characteristic of a Category.")
 abstract class CategoryCharacteristic(
@@ -17,12 +16,11 @@ abstract class CategoryCharacteristic(
 ) : Node(id) {
 
     @GraphQLDescription("The Category this item belongs to.")
-    suspend fun category(
-        @Autowired
-        @GraphQLIgnore
-        categoryRepository: CategoryRepository
-    ): Category {
-        return categoryRepository.findById(categoryId).awaitSingle().toDTO()
+    fun category(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<Category> {
+        return dfe.getDataLoader<UUID, Category>(CategoryDataLoader::class.simpleName!!)
+            .load(categoryId, dfe)
     }
 
 }

@@ -18,7 +18,7 @@ class CategoryEntity(
     val description: String,
     @Id
     val id: UUID?
-) {
+) : BaseEntity<Category> {
 
     companion object {
         /**
@@ -27,12 +27,7 @@ class CategoryEntity(
         val ENTITY = QCategoryEntity.categoryEntity!!
     }
 
-    /**
-     * Convert this entity to a GraphQL DTO
-     *
-     * @return GraphQL DTO
-     */
-    fun toDTO(): Category {
+    override fun toDTO(): Category {
         return Category(
             id = id!!,
             name = name,

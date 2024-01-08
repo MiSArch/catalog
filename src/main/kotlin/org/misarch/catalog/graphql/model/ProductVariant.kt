@@ -2,14 +2,16 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import kotlinx.coroutines.reactor.awaitSingle
+import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.dataloader.ProductDataLoader
+import org.misarch.catalog.graphql.dataloader.ProductVariantVersionDataLoader
 import org.misarch.catalog.graphql.model.connection.ProductVariantVersionConnection
 import org.misarch.catalog.graphql.model.connection.ProductVariantVersionOrder
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
-import org.misarch.catalog.persistence.repository.ProductRepository
 import org.misarch.catalog.persistence.repository.ProductVariantVersionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A variant of a Product.")
 class ProductVariant(
@@ -19,21 +21,19 @@ class ProductVariant(
 ) : Node(id) {
 
     @GraphQLDescription("The Product belonging to this variant.")
-    suspend fun product(
-        @Autowired
-        @GraphQLIgnore
-        productRepository: ProductRepository
-    ): Product {
-        return productRepository.findById(productId).awaitSingle().toDTO()
+    fun product(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<Product> {
+        return dfe.getDataLoader<UUID, Product>(ProductDataLoader::class.simpleName!!)
+            .load(productId, dfe)
     }
 
     @GraphQLDescription("The current version of the ProductVariant.")
-    suspend fun currentVersion(
-        @Autowired
-        @GraphQLIgnore
-        productVariantVersionRepository: ProductVariantVersionRepository
-    ): ProductVariantVersion {
-        return productVariantVersionRepository.findById(currentVersion).awaitSingle().toDTO()
+    fun currentVersion(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<ProductVariantVersion> {
+        return dfe.getDataLoader<UUID, ProductVariantVersion>(ProductVariantVersionDataLoader::class.simpleName!!)
+            .load(currentVersion, dfe)
     }
 
     @GraphQLDescription("Get all associated versions")

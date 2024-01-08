@@ -41,10 +41,6 @@ class CategoryConnection(
 ) {
 
     override val primaryKey: ComparableExpression<*> get() = CategoryEntity.ENTITY.id
-
-    override fun toDto(value: CategoryEntity): Category {
-        return value.toDTO()
-    }
 }
 
 @GraphQLDescription("Category order fields")

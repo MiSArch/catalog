@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.sql.RelationalPathBase
 import com.querydsl.sql.SQLQuery
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.persistence.model.BaseEntity
 
 /**
  * A GraphQL connection that is backed by a QueryDSL repository
@@ -26,7 +27,7 @@ import kotlinx.coroutines.reactor.awaitSingle
  * @property applyJoin A function to apply one or more joins to the query
  */
 @GraphQLIgnore
-abstract class BaseConnection<T, D>(
+abstract class BaseConnection<T, D : BaseEntity<T>>(
     private val first: Int?,
     private val skip: Int?,
     private val predicate: Predicate?,
@@ -68,7 +69,7 @@ abstract class BaseConnection<T, D>(
             } else {
                 joinedQuery
             }.orderBy(*order).offset(skip?.toLong() ?: 0).limit(first?.toLong() ?: Long.MAX_VALUE)
-        }.all().collectList().awaitSingle().map { toDto(it) }
+        }.all().collectList().awaitSingle().map { it.toDTO() }
     }
 
     @GraphQLDescription("Whether this connection has a next page")
@@ -86,8 +87,6 @@ abstract class BaseConnection<T, D>(
             }.offset(first.toLong() + (skip ?: 0)).limit(1)
         }.all().hasElements().awaitSingle()
     }
-
-    internal abstract fun toDto(value: D): T
 
 }
 

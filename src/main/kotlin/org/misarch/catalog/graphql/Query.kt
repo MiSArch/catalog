@@ -3,7 +3,9 @@ package org.misarch.catalog.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.scalars.ID
 import com.expediagroup.graphql.server.operations.Query
-import kotlinx.coroutines.reactor.awaitSingle
+import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.dataloader.CategoryDataLoader
+import org.misarch.catalog.graphql.dataloader.ProductDataLoader
 import org.misarch.catalog.graphql.model.Category
 import org.misarch.catalog.graphql.model.Product
 import org.misarch.catalog.graphql.model.connection.CategoryConnection
@@ -14,6 +16,8 @@ import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
 import org.misarch.catalog.util.uuid
 import org.springframework.stereotype.Component
+import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * Defines GraphQL queries
@@ -52,19 +56,21 @@ class Query(
     }
 
     @GraphQLDescription("Get a product by id")
-    suspend fun product(
+    fun product(
         @GraphQLDescription("The id of the product")
-        id: ID
-    ): Product {
-        return productRepository.findById(id.uuid).awaitSingle().toDTO()
+        id: ID,
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<Product> {
+        return dfe.getDataLoader<UUID, Product>(ProductDataLoader::class.simpleName!!).load(id.uuid)
     }
 
     @GraphQLDescription("Get a category by id")
-    suspend fun category(
+    fun category(
         @GraphQLDescription("The id of the category")
-        id: ID
-    ): Category {
-        return categoryRepository.findById(id.uuid).awaitSingle().toDTO()
+        id: ID,
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<Category> {
+        return dfe.getDataLoader<UUID, Category>(CategoryDataLoader::class.simpleName!!).load(id.uuid)
     }
 
 }

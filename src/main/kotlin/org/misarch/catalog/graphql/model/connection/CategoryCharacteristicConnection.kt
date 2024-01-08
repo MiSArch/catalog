@@ -41,10 +41,6 @@ class CategoryCharacteristicConnection(
 ) {
 
     override val primaryKey: ComparableExpression<*> get() = CategoryCharacteristicEntity.ENTITY.id
-
-    override fun toDto(value: CategoryCharacteristicEntity): CategoryCharacteristic {
-        return value.toDTO()
-    }
 }
 
 @GraphQLDescription("CategoryCharacteristic order fields")

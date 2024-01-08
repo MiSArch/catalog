@@ -1,11 +1,10 @@
 package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import kotlinx.coroutines.reactor.awaitSingle
-import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
-import org.springframework.beans.factory.annotation.Autowired
+import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.dataloader.CategoryCharacteristicDataLoader
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A value for a CategoryCharacteristic.")
 abstract class CategoryCharacteristicValue(
@@ -13,12 +12,11 @@ abstract class CategoryCharacteristicValue(
 ) {
 
     @GraphQLDescription("The associated CategoryCharacteristic this is a value of.")
-    suspend fun characteristic(
-        @Autowired
-        @GraphQLIgnore
-        categoryCharacteristicRepository: CategoryCharacteristicRepository
-    ): CategoryCharacteristic {
-        return categoryCharacteristicRepository.findById(characteristicId).awaitSingle().toDTO()
+    fun characteristic(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<CategoryCharacteristic> {
+        return dfe.getDataLoader<UUID, CategoryCharacteristic>(CategoryCharacteristicDataLoader::class.simpleName!!)
+            .load(characteristicId, dfe)
     }
 
 }

@@ -29,7 +29,7 @@ class CategoryCharacteristicEntity(
     val categoryId: UUID,
     @Id
     val id: UUID?
-) {
+) : BaseEntity<CategoryCharacteristic> {
 
     companion object {
         /**
@@ -38,12 +38,7 @@ class CategoryCharacteristicEntity(
         val ENTITY = QCategoryCharacteristicEntity.categoryCharacteristicEntity!!
     }
 
-    /**
-     * Convert this entity to a GraphQL DTO
-     *
-     * @return GraphQL DTO
-     */
-    fun toDTO(): CategoryCharacteristic {
+    override fun toDTO(): CategoryCharacteristic {
         return when (discriminator) {
             CategoryCharacteristicDiscriminator.CATEGORICAL -> CategoricalCategoryCharacteristic(
                 id = id!!,
