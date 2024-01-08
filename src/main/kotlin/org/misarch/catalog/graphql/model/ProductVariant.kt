@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture
 @GraphQLDescription("A variant of a Product.")
 class ProductVariant(
     id: UUID,
-    @GraphQLDescription("If true, the ProductVariant is visible to customers.")
+    @property:GraphQLDescription("If true, the ProductVariant is visible to customers.")
     val isPubliclyVisible: Boolean, private val productId: UUID, private val currentVersion: UUID
 ) : Node(id) {
 

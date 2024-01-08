@@ -5,7 +5,7 @@ import com.expediagroup.graphql.generator.scalars.ID
 
 @GraphQLDescription("Input for the createProductVariant mutation")
 class CreateProductVariantInput(
-    @GraphQLDescription("The id of the Product this ProductVariant belongs to.")
+    @property:GraphQLDescription("The id of the Product this ProductVariant belongs to.")
     val productId: ID,
     isPubliclyVisible: Boolean,
     initialVersion: ProductVariantVersionInput

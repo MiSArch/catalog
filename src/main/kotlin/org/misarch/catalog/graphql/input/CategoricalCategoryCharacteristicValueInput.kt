@@ -5,8 +5,8 @@ import com.expediagroup.graphql.generator.scalars.ID
 
 @GraphQLDescription("Input for creating a CategoricalCategoryCharacteristicValue.")
 class CategoricalCategoryCharacteristicValueInput(
-    @GraphQLDescription("The value of the CategoricalCategoryCharacteristicValue.")
+    @property:GraphQLDescription("The value of the CategoricalCategoryCharacteristicValue.")
     val value: String,
-    @GraphQLDescription("The id of the CategoryCharacteristic.")
+    @property:GraphQLDescription("The id of the CategoryCharacteristic.")
     val characteristicId: ID
 )

@@ -9,6 +9,7 @@ abstract class Node(
     internal val id: UUID
 ) {
 
+    @GraphQLDescription("The ID of the node.")
     fun id(): ID {
         return ID(id.toString())
     }

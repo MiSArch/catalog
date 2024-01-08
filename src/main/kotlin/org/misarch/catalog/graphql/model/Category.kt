@@ -17,9 +17,9 @@ import java.util.*
 @GraphQLDescription("A category")
 class Category(
     id: UUID,
-    @GraphQLDescription("The name of the category.")
+    @property:GraphQLDescription("The name of the category.")
     val name: String,
-    @GraphQLDescription("The description of the category.")
+    @property:GraphQLDescription("The description of the category.")
     val description: String,
 ) : Node(id) {
 
