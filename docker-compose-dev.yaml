@@ -16,5 +16,16 @@ services:
       - 8080:8080
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+  catalog-dapr:
+    extends:
+      file: docker-compose-base.yaml
+      service: catalog-dapr
+    volumes:
+      - "./dapr-config-minimal.yaml:/config.yaml"
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
+    ports:
+      - "50006:50006"
 volumes:
   catalog-db-data:
