@@ -6,6 +6,6 @@ import java.util.*
 @GraphQLDescription("A possible value for a categorical characteristic.")
 class CategoricalCategoryCharacteristicValue(
     characteristicId: UUID,
-    @GraphQLDescription("The value of the characteristic.")
+    @property:GraphQLDescription("The value of the characteristic.")
     val value: String,
 ) : CategoryCharacteristicValue(characteristicId)

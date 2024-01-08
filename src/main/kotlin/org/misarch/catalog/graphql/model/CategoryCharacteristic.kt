@@ -9,9 +9,9 @@ import java.util.concurrent.CompletableFuture
 @GraphQLDescription("A characteristic of a Category.")
 abstract class CategoryCharacteristic(
     id: UUID,
-    @GraphQLDescription("The name of the CategoryCharacteristic.")
+    @property:GraphQLDescription("The name of the CategoryCharacteristic.")
     val name: String,
-    @GraphQLDescription("The description of the CategoryCharacteristic.")
+    @property:GraphQLDescription("The description of the CategoryCharacteristic.")
     val description: String, private val categoryId: UUID
 ) : Node(id) {
 
