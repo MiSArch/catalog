@@ -1,7 +1,7 @@
 package org.misarch.catalog.graphql.input
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.scalars.ID
+import java.util.UUID
 
 @GraphQLDescription("Input for the createNumericalCategoryCharacteristic mutation")
 class CreateNumericalCategoryCharacteristicInput(
@@ -9,5 +9,5 @@ class CreateNumericalCategoryCharacteristicInput(
     description: String,
     unit: String,
     @property:GraphQLDescription("The Category that the NumericalCategoryCharacteristic belongs to")
-    val categoryId: ID
+    val categoryId: UUID
 ) : NumericalCategoryCharacteristicInput(name, description, unit)

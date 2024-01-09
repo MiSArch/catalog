@@ -1,7 +1,7 @@
 package org.misarch.catalog.graphql.input
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.scalars.ID
+import java.util.UUID
 
 @GraphQLDescription("Input for the createProduct mutation")
 class CreateProductInput(
@@ -12,5 +12,5 @@ class CreateProductInput(
     @property:GraphQLDescription("The default ProductVariant of the Product.")
     val defaultVariant: ProductVariantInput,
     @property:GraphQLDescription("The Categories this product is associated with.")
-    val categoryIds: List<ID>,
+    val categoryIds: List<UUID>,
 )

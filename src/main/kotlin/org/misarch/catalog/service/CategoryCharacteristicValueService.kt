@@ -6,7 +6,6 @@ import org.misarch.catalog.persistence.model.CategoryCharacteristicDiscriminator
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
 import org.misarch.catalog.util.duplicates
-import org.misarch.catalog.util.uuid
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -32,12 +31,12 @@ class CategoryCharacteristicValueService(
         numericalValues: List<NumericalCategoryCharacteristicValueInput>,
         productVariantVersionId: UUID
     ) {
-        val categoricalUUIDs = categoricalValues.map { it.characteristicId.uuid }
-        val numericalUUIDs = numericalValues.map { it.characteristicId.uuid }
+        val categoricalUUIDs = categoricalValues.map { it.characteristicId }
+        val numericalUUIDs = numericalValues.map { it.characteristicId }
         validateCharacteristicIdsForUpsert(productVariantVersionId, categoricalUUIDs, numericalUUIDs)
         categoricalValues.forEach {
             repository.upsert(
-                it.characteristicId.uuid,
+                it.characteristicId,
                 productVariantVersionId,
                 it.value,
                 null,
@@ -46,7 +45,7 @@ class CategoryCharacteristicValueService(
         }
         numericalValues.forEach {
             repository.upsert(
-                it.characteristicId.uuid,
+                it.characteristicId,
                 productVariantVersionId,
                 null,
                 it.value,
