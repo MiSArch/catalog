@@ -1,6 +1,7 @@
 package org.misarch.catalog.graphql
 
-import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
+import com.expediagroup.graphql.generator.federation.FederatedSchemaGeneratorHooks
+import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
 import graphql.scalars.datetime.DateTimeScalar
 import graphql.scalars.id.UUIDScalar
 import graphql.schema.GraphQLType
@@ -14,14 +15,15 @@ import kotlin.reflect.KType
 class GraphQLConfiguration {
 
     @Bean
-    fun schemaGeneratorHooks() = object : SchemaGeneratorHooks {
-        override fun willGenerateGraphQLType(type: KType): GraphQLType? {
-            return when (type.classifier) {
-                OffsetDateTime::class -> DateTimeScalar.INSTANCE
-                UUID::class -> UUIDScalar.INSTANCE
-                else -> null
+    fun federatedSchemaGeneratorHooks(resolvers: List<FederatedTypeResolver>) =
+        object : FederatedSchemaGeneratorHooks(resolvers) {
+            override fun willGenerateGraphQLType(type: KType): GraphQLType? {
+                return when (type.classifier) {
+                    OffsetDateTime::class -> DateTimeScalar.INSTANCE
+                    UUID::class -> UUIDScalar.INSTANCE
+                    else -> null
+                }
             }
         }
-    }
 
 }

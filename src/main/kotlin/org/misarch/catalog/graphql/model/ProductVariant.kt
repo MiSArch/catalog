@@ -2,6 +2,8 @@ package org.misarch.catalog.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.federation.directives.FieldSet
+import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.dataloader.ProductDataLoader
 import org.misarch.catalog.graphql.dataloader.ProductVariantVersionDataLoader
@@ -14,6 +16,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @GraphQLDescription("A variant of a Product.")
+@KeyDirective(fields = FieldSet("id"))
 class ProductVariant(
     id: UUID,
     @property:GraphQLDescription("If true, the ProductVariant is visible to customers.")
