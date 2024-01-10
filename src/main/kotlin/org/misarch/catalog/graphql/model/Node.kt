@@ -6,12 +6,6 @@ import java.util.*
 
 @GraphQLDescription("An object with an ID.")
 abstract class Node(
-    internal val id: UUID
-) {
-
-    @GraphQLDescription("The ID of the node.")
-    fun id(): ID {
-        return ID(id.toString())
-    }
-
-}
+    @property:GraphQLDescription("The ID of the node.")
+    val id: UUID
+)

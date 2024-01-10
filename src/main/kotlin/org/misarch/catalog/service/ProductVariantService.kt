@@ -8,7 +8,6 @@ import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.ProductRepository
 import org.misarch.catalog.persistence.repository.ProductVariantRepository
-import org.misarch.catalog.util.uuid
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -35,10 +34,10 @@ class ProductVariantService(
      * @return the created product variant
      */
     suspend fun createProductVariant(input: CreateProductVariantInput): ProductVariantEntity {
-        if (!productRepository.existsById(input.productId.uuid).awaitSingle()) {
+        if (!productRepository.existsById(input.productId).awaitSingle()) {
             throw IllegalArgumentException("Product with id ${input.productId} does not exist.")
         }
-        val productVariant = createProductVariantInternal(input, input.productId.uuid)
+        val productVariant = createProductVariantInternal(input, input.productId)
         return productVariant
     }
 

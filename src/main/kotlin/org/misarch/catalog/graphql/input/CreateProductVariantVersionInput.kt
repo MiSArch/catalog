@@ -1,12 +1,12 @@
 package org.misarch.catalog.graphql.input
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.scalars.ID
+import java.util.UUID
 
 @GraphQLDescription("Input for the createProductVariantVersion mutation")
 class CreateProductVariantVersionInput(
     @property:GraphQLDescription("The id of the ProductVariant this ProductVariantVersion belongs to.")
-    val productVariantId: ID,
+    val productVariantId: UUID,
     name: String,
     description: String,
     retailPrice: Int,
