@@ -13,9 +13,9 @@ import com.querydsl.core.types.OrderSpecifier
  */
 @GraphQLIgnore
 abstract class BaseOrder<T : BaseOrderField>(
-    @GraphQLDescription("The direction to order by")
+    @property:GraphQLDescription("The direction to order by")
     val direction: OrderDirection,
-    @GraphQLDescription("The field to order by")
+    @property:GraphQLDescription("The field to order by")
     val field: T
 ) {
 

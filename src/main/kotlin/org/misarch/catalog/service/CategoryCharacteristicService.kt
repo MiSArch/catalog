@@ -10,7 +10,6 @@ import org.misarch.catalog.persistence.model.CategoryCharacteristicEntity
 import org.misarch.catalog.persistence.model.CategoryEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
 import org.misarch.catalog.persistence.repository.CategoryRepository
-import org.misarch.catalog.util.uuid
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -33,7 +32,7 @@ class CategoryCharacteristicService(
      * @return the created characteristic
      */
     suspend fun createCategoricalCategoryCharacteristic(input: CreateCategoricalCategoryCharacteristicInput): CategoryCharacteristicEntity {
-        val categoryId = input.categoryId.uuid
+        val categoryId = input.categoryId
         checkCategoryExists(categoryId)
         return createCategoricalCategoryCharacteristicInternal(input, categoryId)
     }
@@ -67,7 +66,7 @@ class CategoryCharacteristicService(
      * @return the created characteristic
      */
     suspend fun createNumericalCategoryCharacteristic(input: CreateNumericalCategoryCharacteristicInput): CategoryCharacteristicEntity {
-        val categoryId = input.categoryId.uuid
+        val categoryId = input.categoryId
         checkCategoryExists(categoryId)
         return createNumericalCategoryCharacteristicInternal(input, categoryId)
     }

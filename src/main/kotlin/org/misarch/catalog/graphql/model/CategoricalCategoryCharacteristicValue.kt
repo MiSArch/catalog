@@ -8,6 +8,6 @@ import java.util.*
 @ShareableDirective
 class CategoricalCategoryCharacteristicValue(
     characteristicId: UUID,
-    @GraphQLDescription("The value of the characteristic.")
+    @property:GraphQLDescription("The value of the characteristic.")
     val value: String,
 ) : CategoryCharacteristicValue(characteristicId)

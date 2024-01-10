@@ -12,6 +12,6 @@ class NumericalCategoryCharacteristic(
     name: String,
     description: String,
     categoryId: UUID,
-    @GraphQLDescription("The unit of the NumericalCategoryCharacteristic.")
+    @property:GraphQLDescription("The unit of the NumericalCategoryCharacteristic.")
     val unit: String,
 ) : CategoryCharacteristic(id, name, description, categoryId)

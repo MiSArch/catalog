@@ -19,17 +19,17 @@ import java.util.concurrent.CompletableFuture
 @KeyDirective(fields = FieldSet("id"))
 class ProductVariantVersion(
     id: UUID,
-    @GraphQLDescription("The name of the ProductVariantVersion.")
+    @property:GraphQLDescription("The name of the ProductVariantVersion.")
     val name: String,
-    @GraphQLDescription("The description of the ProductVariantVersion.")
+    @property:GraphQLDescription("The description of the ProductVariantVersion.")
     val description: String,
-    @GraphQLDescription("The version of the ProductVariantVersion.")
+    @property:GraphQLDescription("The version of the ProductVariantVersion.")
     val version: Int,
-    @GraphQLDescription("The retail price of the ProductVariantVersion.")
+    @property:GraphQLDescription("The retail price of the ProductVariantVersion.")
     val retailPrice: Int,
-    @GraphQLDescription("The date when the ProductVariantVersion version was created.")
+    @property:GraphQLDescription("The date when the ProductVariantVersion version was created.")
     val createdAt: OffsetDateTime,
-    @GraphQLDescription("The amount of days for which an instance of the ProductVariantVersion can be returned after purchase")
+    @property:GraphQLDescription("The amount of days for which an instance of the ProductVariantVersion can be returned after purchase")
     val canBeReturnedForDays: Double?,
     private val productVariantId: UUID
 ) : Node(id) {
