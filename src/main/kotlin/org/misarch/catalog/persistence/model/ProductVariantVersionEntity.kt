@@ -1,9 +1,11 @@
 package org.misarch.catalog.persistence.model
 
+import org.misarch.catalog.event.model.ProductVariantVersionDTO
 import org.misarch.catalog.graphql.model.ProductVariantVersion
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -46,6 +48,24 @@ class ProductVariantVersionEntity(
             version = version,
             retailPrice = retailPrice,
             createdAt = createdAt,
+            canBeReturnedForDays = canBeReturnedForDays,
+            productVariantId = productVariantId
+        )
+    }
+
+    /**
+     * Converts the entity to an event DTO
+     *
+     * @return event DTO
+     */
+    fun toEventDTO(): ProductVariantVersionDTO {
+        return ProductVariantVersionDTO(
+            id = id!!,
+            name = name,
+            description = description,
+            version = version,
+            retailPrice = retailPrice,
+            createdAt = createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
             canBeReturnedForDays = canBeReturnedForDays,
             productVariantId = productVariantId
         )

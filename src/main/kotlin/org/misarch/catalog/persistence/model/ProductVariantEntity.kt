@@ -1,5 +1,6 @@
 package org.misarch.catalog.persistence.model
 
+import org.misarch.catalog.event.model.ProductVariantDTO
 import org.misarch.catalog.graphql.model.ProductVariant
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
@@ -35,6 +36,20 @@ class ProductVariantEntity(
             isPubliclyVisible = isPubliclyVisible,
             productId = productId,
             currentVersion = currentVersion!!
+        )
+    }
+
+    /**
+     * Converts the entity to an event DTO
+     *
+     * @return event DTO
+     */
+    fun toEventDTO(): ProductVariantDTO {
+        return ProductVariantDTO(
+            id = id!!,
+            productId = productId,
+            currentVersionId = currentVersion!!,
+            isPubliclyVisible = isPubliclyVisible
         )
     }
 
