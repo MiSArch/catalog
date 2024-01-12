@@ -14,13 +14,16 @@ import com.querydsl.core.types.OrderSpecifier
 @GraphQLIgnore
 abstract class BaseOrder<T : BaseOrderField>(
     @property:GraphQLDescription("The direction to order by")
-    val direction: OrderDirection,
+    val direction: OrderDirection?,
     @property:GraphQLDescription("The field to order by")
-    val field: T
+    val field: T?
 ) {
 
-    fun toOrderSpecifier(): Array<OrderSpecifier<*>> {
-        return field.expressions.map { OrderSpecifier(direction.direction, it) }.toTypedArray()
+    /**
+     * Convert this order to a QueryDSL order specifier
+     */
+    fun toOrderSpecifier(defaultField: T): Array<OrderSpecifier<*>> {
+        return (field ?: defaultField).expressions.map { OrderSpecifier((direction ?: OrderDirection.ASC).direction, it) }.toTypedArray()
     }
 
 }

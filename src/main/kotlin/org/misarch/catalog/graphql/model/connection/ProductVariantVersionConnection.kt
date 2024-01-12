@@ -2,6 +2,7 @@ package org.misarch.catalog.graphql.model.connection
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
+import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
@@ -36,7 +37,7 @@ class ProductVariantVersionConnection(
     first,
     skip,
     predicate,
-    (order ?: ProductVariantVersionOrder.DEFAULT).toOrderSpecifier(),
+    (order ?: ProductVariantVersionOrder.DEFAULT).toOrderSpecifier(ProductVariantVersionOrderField.ID),
     repository,
     ProductVariantVersionEntity.ENTITY,
     applyJoin
@@ -46,14 +47,22 @@ class ProductVariantVersionConnection(
 }
 
 @GraphQLDescription("ProductVariantVersion order fields")
-enum class ProductVariantVersionOrderField(override vararg val expressions: ComparableExpression<*>) : BaseOrderField {
+enum class ProductVariantVersionOrderField(override vararg val expressions: Expression<out Comparable<*>>) :
+    BaseOrderField {
     @GraphQLDescription("Order productVariantVersions by their id")
-    ID(ProductVariantVersionEntity.ENTITY.id)
+    ID(ProductVariantVersionEntity.ENTITY.id),
+
+    @GraphQLDescription("Order productVariantVersions by their version")
+    VERSION(ProductVariantVersionEntity.ENTITY.version, ProductVariantVersionEntity.ENTITY.id),
+
+    @GraphQLDescription("Order productVariantVersions by their creation date")
+    CREATED_AT(ProductVariantVersionEntity.ENTITY.createdAt, ProductVariantVersionEntity.ENTITY.id)
 }
 
 @GraphQLDescription("ProductVariantVersion order")
-class ProductVariantVersionOrder(direction: OrderDirection, field: ProductVariantVersionOrderField) :
-    BaseOrder<ProductVariantVersionOrderField>(direction, field) {
+class ProductVariantVersionOrder(
+    direction: OrderDirection?, field: ProductVariantVersionOrderField?
+) : BaseOrder<ProductVariantVersionOrderField>(direction, field) {
 
     companion object {
         val DEFAULT = ProductVariantVersionOrder(OrderDirection.ASC, ProductVariantVersionOrderField.ID)
