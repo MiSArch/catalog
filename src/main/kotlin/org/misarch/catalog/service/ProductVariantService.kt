@@ -41,8 +41,8 @@ class ProductVariantService(
             throw IllegalArgumentException("Product with id ${input.productId} does not exist.")
         }
         val (productVariant, initialVersion) = createProductVariantInternal(input, input.productId)
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATE, productVariant.toEventDTO())
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATE, initialVersion.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
         return productVariant
     }
 
