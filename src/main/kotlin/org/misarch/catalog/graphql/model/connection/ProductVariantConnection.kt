@@ -2,6 +2,7 @@ package org.misarch.catalog.graphql.model.connection
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
+import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
@@ -36,7 +37,7 @@ class ProductVariantConnection(
     first,
     skip,
     predicate,
-    (order ?: ProductVariantOrder.DEFAULT).toOrderSpecifier(),
+    (order ?: ProductVariantOrder.DEFAULT).toOrderSpecifier(ProductVariantOrderField.ID),
     repository,
     ProductVariantEntity.ENTITY,
     applyJoin
@@ -46,14 +47,15 @@ class ProductVariantConnection(
 }
 
 @GraphQLDescription("ProductVariant order fields")
-enum class ProductVariantOrderField(override vararg val expressions: ComparableExpression<*>) : BaseOrderField {
+enum class ProductVariantOrderField(override vararg val expressions: Expression<out Comparable<*>>) : BaseOrderField {
     @GraphQLDescription("Order productVariants by their id")
     ID(ProductVariantEntity.ENTITY.id)
 }
 
 @GraphQLDescription("ProductVariant order")
-class ProductVariantOrder(direction: OrderDirection, field: ProductVariantOrderField) :
-    BaseOrder<ProductVariantOrderField>(direction, field) {
+class ProductVariantOrder(
+    direction: OrderDirection?, field: ProductVariantOrderField?
+) : BaseOrder<ProductVariantOrderField>(direction, field) {
 
     companion object {
         val DEFAULT = ProductVariantOrder(OrderDirection.ASC, ProductVariantOrderField.ID)

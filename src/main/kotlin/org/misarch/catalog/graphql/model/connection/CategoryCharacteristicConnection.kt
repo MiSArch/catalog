@@ -2,6 +2,7 @@ package org.misarch.catalog.graphql.model.connection
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
+import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
@@ -36,7 +37,7 @@ class CategoryCharacteristicConnection(
     first,
     skip,
     predicate,
-    (order ?: CategoryCharacteristicOrder.DEFAULT).toOrderSpecifier(),
+    (order ?: CategoryCharacteristicOrder.DEFAULT).toOrderSpecifier(CategoryCharacteristicOrderField.ID),
     repository,
     CategoryCharacteristicEntity.ENTITY,
     applyJoin
@@ -46,14 +47,17 @@ class CategoryCharacteristicConnection(
 }
 
 @GraphQLDescription("CategoryCharacteristic order fields")
-enum class CategoryCharacteristicOrderField(override vararg val expressions: ComparableExpression<*>) : BaseOrderField {
+enum class CategoryCharacteristicOrderField(
+    override vararg val expressions: Expression<out Comparable<*>>
+) : BaseOrderField {
     @GraphQLDescription("Order categoryCharacteristics by their id")
     ID(CategoryCharacteristicEntity.ENTITY.id)
 }
 
 @GraphQLDescription("CategoryCharacteristic order")
-class CategoryCharacteristicOrder(direction: OrderDirection, field: CategoryCharacteristicOrderField) :
-    BaseOrder<CategoryCharacteristicOrderField>(direction, field) {
+class CategoryCharacteristicOrder(
+    direction: OrderDirection?, field: CategoryCharacteristicOrderField?
+) : BaseOrder<CategoryCharacteristicOrderField>(direction, field) {
 
     companion object {
         val DEFAULT = CategoryCharacteristicOrder(OrderDirection.ASC, CategoryCharacteristicOrderField.ID)
