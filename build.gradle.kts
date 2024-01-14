@@ -33,6 +33,7 @@ dependencies {
 	implementation("com.querydsl:querydsl-core")
 	implementation("com.infobip:infobip-spring-data-r2dbc-querydsl-boot-starter:9.0.2")
 	implementation("com.graphql-java:graphql-java-extended-scalars:21.0")
+	implementation("io.dapr:dapr-sdk-springboot:1.10.0")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	kapt("com.querydsl:querydsl-core:5.0.0")

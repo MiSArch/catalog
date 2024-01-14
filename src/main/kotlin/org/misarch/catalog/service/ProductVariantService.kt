@@ -1,6 +1,8 @@
 package org.misarch.catalog.service
 
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.event.CatalogEvents
+import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateProductVariantInput
 import org.misarch.catalog.graphql.input.ProductVariantInput
 import org.misarch.catalog.persistence.model.ProductEntity
@@ -17,13 +19,14 @@ import java.util.*
  * @param repository the provided repository
  * @property productVariantVersionService service for [ProductVariantVersionEntity]s
  * @property productRepository repository for [ProductEntity]s
-
+ * @property eventPublisher publisher for events
  */
 @Service
 class ProductVariantService(
     repository: ProductVariantRepository,
     private val productVariantVersionService: ProductVariantVersionService,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val eventPublisher: EventPublisher
 ) : BaseService<ProductVariantEntity, ProductVariantRepository>(repository) {
 
     /**
@@ -37,7 +40,9 @@ class ProductVariantService(
         if (!productRepository.existsById(input.productId).awaitSingle()) {
             throw IllegalArgumentException("Product with id ${input.productId} does not exist.")
         }
-        val productVariant = createProductVariantInternal(input, input.productId)
+        val (productVariant, initialVersion) = createProductVariantInternal(input, input.productId)
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
         return productVariant
     }
 
@@ -46,9 +51,9 @@ class ProductVariantService(
      *
      * @param input defines the product variant (and initial version) to be created
      * @param productId the id of the product
-     * @return the created product variant
+     * @return the created product variant and the initial version
      */
-    suspend fun createProductVariantInternal(input: ProductVariantInput, productId: UUID): ProductVariantEntity {
+    suspend fun createProductVariantInternal(input: ProductVariantInput, productId: UUID): Pair<ProductVariantEntity, ProductVariantVersionEntity> {
         val productVariant = ProductVariantEntity(
             isPubliclyVisible = input.isPubliclyVisible,
             productId = productId,
@@ -61,7 +66,8 @@ class ProductVariantService(
             savedProductVariant.id!!
         )
         savedProductVariant.currentVersion = initialVersion.id!!
-        return repository.save(savedProductVariant).awaitSingle()
+        val newSavedProductVariant = repository.save(savedProductVariant).awaitSingle()
+        return Pair(newSavedProductVariant, initialVersion)
     }
 
 }

@@ -1,6 +1,8 @@
 package org.misarch.catalog.service
 
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.event.CatalogEvents
+import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateProductInput
 import org.misarch.catalog.persistence.model.CategoryEntity
 import org.misarch.catalog.persistence.model.ProductEntity
@@ -19,13 +21,15 @@ import java.util.*
  * @property productVariantService service for [ProductVariantEntity]s
  * @property productToCategoryRepository repository for [ProductToCategoryEntity]s
  * @property categoryRepository repository for [CategoryEntity]s
+ * @property eventPublisher publisher for events
  */
 @Service
 class ProductService(
     repository: ProductRepository,
     private val productVariantService: ProductVariantService,
     private val productToCategoryRepository: ProductToCategoryRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val eventPublisher: EventPublisher
 ) : BaseService<ProductEntity, ProductRepository>(repository) {
 
     /**
@@ -43,9 +47,13 @@ class ProductService(
         )
         val savedProduct = repository.save(product).awaitSingle()
         addCategories(savedProduct, input.categoryIds)
-        val productVariant = productVariantService.createProductVariantInternal(input.defaultVariant, savedProduct.id!!)
+        val (productVariant, initialVersion) = productVariantService.createProductVariantInternal(input.defaultVariant, savedProduct.id!!)
         savedProduct.defaultVariantId = productVariant.id
-        return repository.save(savedProduct).awaitSingle()
+        val newSavedProduct =  repository.save(savedProduct).awaitSingle()
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_CREATED, newSavedProduct.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
+        return newSavedProduct
     }
 
     /**

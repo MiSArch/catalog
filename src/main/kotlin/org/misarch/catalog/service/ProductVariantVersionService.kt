@@ -1,6 +1,8 @@
 package org.misarch.catalog.service
 
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.event.CatalogEvents
+import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateProductVariantVersionInput
 import org.misarch.catalog.graphql.input.ProductVariantVersionInput
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
@@ -18,12 +20,14 @@ import java.util.*
  * @param repository the provided repository
  * @property productVariantRepository repository for [ProductVariantEntity]s
  * @property categoryCharacteristicValueService service for [CategoryCharacteristicValueEntity]s
+ * @property eventPublisher publisher for events
  */
 @Service
 class ProductVariantVersionService(
     repository: ProductVariantVersionRepository,
     private val productVariantRepository: ProductVariantRepository,
-    private val categoryCharacteristicValueService: CategoryCharacteristicValueService
+    private val categoryCharacteristicValueService: CategoryCharacteristicValueService,
+    private val eventPublisher: EventPublisher
 ) : BaseService<ProductVariantVersionEntity, ProductVariantVersionRepository>(repository) {
 
     /**
@@ -39,6 +43,7 @@ class ProductVariantVersionService(
             throw IllegalArgumentException("Product variant with id ${input.productVariantId} does not exist.")
         }
         val productVariantVersion = createProductVariantVersionInternal(input, input.productVariantId)
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, productVariantVersion.toEventDTO())
         return productVariantVersion
     }
 
