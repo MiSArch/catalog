@@ -20,7 +20,7 @@ class ProductVariantEntity(
     val productId: UUID,
     var currentVersion: UUID?,
     @Id
-    val id: UUID?
+    override val id: UUID?
 ) : BaseEntity<ProductVariant> {
 
     companion object {

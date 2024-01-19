@@ -30,7 +30,7 @@ class ProductVariantVersionEntity(
     val canBeReturnedForDays: Double?,
     val productVariantId: UUID,
     @Id
-    val id: UUID?
+    override val id: UUID?
 ) : BaseEntity<ProductVariantVersion> {
 
     companion object {

@@ -17,4 +17,8 @@ class CategoricalCategoryCharacteristicDataLoader(
     override fun toDTO(entity: CategoryCharacteristicEntity): CategoricalCategoryCharacteristic {
         return entity.toDTO() as CategoricalCategoryCharacteristic
     }
+
+    override fun key(entity: CategoryCharacteristicEntity): java.util.UUID {
+        return entity.id!!
+    }
 }

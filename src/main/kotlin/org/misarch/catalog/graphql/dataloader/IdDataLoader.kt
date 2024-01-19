@@ -17,4 +17,8 @@ abstract class IdDataLoader<T, D : BaseEntity<T>>(repository: ReactiveCrudReposi
     override fun toDTO(entity: D): T {
         return entity.toDTO()
     }
+
+    override fun key(entity: D): UUID {
+        return entity.id!!
+    }
 }

@@ -20,7 +20,7 @@ class ProductEntity(
     var isPubliclyVisible: Boolean,
     var defaultVariantId: UUID?,
     @Id
-    val id: UUID?
+    override val id: UUID?
 ) : BaseEntity<Product> {
 
     companion object {

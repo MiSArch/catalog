@@ -1,5 +1,7 @@
 package org.misarch.catalog.persistence.model
 
+import java.util.UUID
+
 /**
  * An entity that can be converted to a DTO
  *
@@ -13,5 +15,10 @@ interface BaseEntity<T> {
      * @return the converted DTO
      */
     fun toDTO(): T
+
+    /**
+     * The primary key of the entity
+     */
+    val id: UUID?
 
 }

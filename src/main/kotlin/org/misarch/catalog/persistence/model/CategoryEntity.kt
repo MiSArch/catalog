@@ -17,7 +17,7 @@ class CategoryEntity(
     val name: String,
     val description: String,
     @Id
-    val id: UUID?
+    override val id: UUID?
 ) : BaseEntity<Category> {
 
     companion object {
