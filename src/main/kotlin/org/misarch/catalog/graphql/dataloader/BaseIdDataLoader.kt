@@ -20,7 +20,9 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param D type of the entity
  * @property repository repository to load the entities from
  */
-abstract class BaseIdDataLoader<T, D>(private val repository: ReactiveCrudRepository<D, UUID>) :
+abstract class BaseIdDataLoader<T, D>(
+    private val repository: ReactiveCrudRepository<D, UUID>
+) :
     KotlinDataLoader<UUID, T> {
     override val dataLoaderName: String
         get() = this::class.simpleName!!
@@ -30,7 +32,8 @@ abstract class BaseIdDataLoader<T, D>(private val repository: ReactiveCrudReposi
             val contextScope = batchLoaderEnvironment.getContext<GraphQLContext>()?.get<CoroutineScope>()
             val coroutineScope = contextScope ?: CoroutineScope(EmptyCoroutineContext)
             coroutineScope.future {
-                repository.findAllById(ids).collectList().awaitSingle().map { toDTO(it) }.toList()
+                val entities = repository.findAllById(ids).collectList().awaitSingle().associateBy { key(it) }
+                ids.map { toDTO(entities[it]!!) }
             }
         }, DataLoaderOptions.newOptions().setBatchLoaderContextProvider { graphQLContext })
     }
@@ -39,4 +42,12 @@ abstract class BaseIdDataLoader<T, D>(private val repository: ReactiveCrudReposi
      * Converts the entity to a DTO.
      */
     abstract fun toDTO(entity: D): T
+
+    /**
+     * Returns the key of the entity.
+     *
+     * @param entity the entity
+     * @return the key of the entity
+     */
+    abstract fun key(entity: D): UUID
 }

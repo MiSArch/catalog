@@ -28,7 +28,7 @@ class CategoryCharacteristicEntity(
     val unit: String?,
     val categoryId: UUID,
     @Id
-    val id: UUID?
+    override val id: UUID?
 ) : BaseEntity<CategoryCharacteristic> {
 
     companion object {

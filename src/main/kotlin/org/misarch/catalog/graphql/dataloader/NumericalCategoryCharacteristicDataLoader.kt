@@ -4,6 +4,7 @@ import org.misarch.catalog.graphql.model.NumericalCategoryCharacteristic
 import org.misarch.catalog.persistence.model.CategoryCharacteristicEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
 import org.springframework.stereotype.Component
+import java.util.*
 
 /**
  * Data loader for [NumericalCategoryCharacteristic]s
@@ -16,5 +17,9 @@ class NumericalCategoryCharacteristicDataLoader(
 ) : BaseIdDataLoader<NumericalCategoryCharacteristic, CategoryCharacteristicEntity>(repository) {
     override fun toDTO(entity: CategoryCharacteristicEntity): NumericalCategoryCharacteristic {
         return entity.toDTO() as NumericalCategoryCharacteristic
+    }
+
+    override fun key(entity: CategoryCharacteristicEntity): UUID {
+        return entity.id!!
     }
 }
