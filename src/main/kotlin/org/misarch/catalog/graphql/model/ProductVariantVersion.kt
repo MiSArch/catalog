@@ -8,6 +8,7 @@ import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
+import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,7 +58,7 @@ class ProductVariantVersion(
         return CategoryCharacteristicValueConnection(
             first,
             skip,
-            ProductVariantVersionEntity.ENTITY.productVariantId.eq(id),
+            CategoryCharacteristicValueEntity.ENTITY.productVariantVersionId.eq(id),
             orderBy,
             categoryCharacteristicValueRepository
         )
