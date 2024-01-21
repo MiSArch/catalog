@@ -58,7 +58,7 @@ abstract class BaseConnection<T, D : BaseEntity<T>>(
         }.first().awaitSingle().toInt()
     }
 
-    @GraphQLDescription("The resulting .")
+    @GraphQLDescription("The resulting items.")
     @Suppress("UNCHECKED_CAST")
     suspend fun nodes(): List<T> {
         return repository.query {
