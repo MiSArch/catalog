@@ -3,9 +3,11 @@ package org.misarch.catalog.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.dataloader.CategoryCharacteristicDataLoader
 import org.misarch.catalog.graphql.dataloader.CategoryDataLoader
 import org.misarch.catalog.graphql.dataloader.ProductDataLoader
 import org.misarch.catalog.graphql.model.Category
+import org.misarch.catalog.graphql.model.CategoryCharacteristic
 import org.misarch.catalog.graphql.model.Product
 import org.misarch.catalog.graphql.model.connection.CategoryConnection
 import org.misarch.catalog.graphql.model.connection.CategoryOrder
@@ -69,6 +71,15 @@ class Query(
         dfe: DataFetchingEnvironment
     ): CompletableFuture<Category> {
         return dfe.getDataLoader<UUID, Category>(CategoryDataLoader::class.simpleName!!).load(id)
+    }
+
+    @GraphQLDescription("Get a characteristic by id")
+    fun categoryCharacteristic(
+        @GraphQLDescription("The id of the characteristic")
+        id: UUID,
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<CategoryCharacteristic> {
+        return dfe.getDataLoader<UUID, CategoryCharacteristic>(CategoryCharacteristicDataLoader::class.simpleName!!).load(id)
     }
 
 }
