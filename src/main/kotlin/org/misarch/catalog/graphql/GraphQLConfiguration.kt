@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.federation.FederatedSchemaGeneratorHoo
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
 import graphql.scalars.datetime.DateTimeScalar
 import graphql.scalars.id.UUIDScalar
+import graphql.schema.GraphQLSchema
 import graphql.schema.GraphQLType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +24,10 @@ class GraphQLConfiguration {
                     UUID::class -> UUIDScalar.INSTANCE
                     else -> null
                 }
+            }
+
+            override fun didBuildSchema(builder: GraphQLSchema.Builder): GraphQLSchema.Builder {
+                return super.didBuildSchema(builder).clearDirectives()
             }
         }
 

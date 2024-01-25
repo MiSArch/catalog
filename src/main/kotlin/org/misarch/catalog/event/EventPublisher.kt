@@ -18,7 +18,7 @@ class EventPublisher(private val client: DaprClient) {
      * @param message the message to publish
      */
     suspend fun publishEvent(topic: String, message: Any) {
-        client.publishEvent("pubsub", "catalog/$topic", message).awaitSingleOrNull()
+        client.publishEvent(CatalogEvents.PUBSUB_NAME, "catalog/$topic", message).awaitSingleOrNull()
     }
 
 }

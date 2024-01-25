@@ -18,4 +18,9 @@ object CatalogEvents {
      * Topic for product variant version creation events
      */
     const val PRODUCT_VARIANT_VERSION_CREATED = "product-variant-version/created"
+
+    /**
+     * Name of the pubsub component
+     */
+    const val PUBSUB_NAME = "pubsub"
 }
