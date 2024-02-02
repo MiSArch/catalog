@@ -4,6 +4,7 @@ import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.event.CatalogEvents
 import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateProductInput
+import org.misarch.catalog.graphql.input.UpdateProductInput
 import org.misarch.catalog.persistence.model.CategoryEntity
 import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.model.ProductToCategoryEntity
@@ -54,6 +55,24 @@ class ProductService(
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
         return newSavedProduct
+    }
+
+    /**
+     * Updates a product
+     *
+     * @param input defines the product to be updated
+     * @return the updated product
+     */
+    suspend fun updateProduct(input: UpdateProductInput): ProductEntity {
+        val product = repository.findById(input.id).awaitSingle()
+        if (input.isPubliclyVisible != null) {
+            product.isPubliclyVisible = input.isPubliclyVisible
+        }
+        if (input.internalName != null) {
+            product.internalName = input.internalName
+        }
+        val savedProduct = repository.save(product).awaitSingle()
+        return savedProduct
     }
 
     /**
