@@ -33,7 +33,7 @@ class DaprEventController(
         @RequestBody
         cloudEvent: CloudEvent<CreateTaxRateDTO>
     ) {
-        taxRateService.registerUser(cloudEvent.data)
+        taxRateService.registerTaxRate(cloudEvent.data)
     }
 
 }

@@ -20,7 +20,7 @@ class TaxRateService(
      *
      * @param taxRateDTO the TaxRate to register
      */
-    suspend fun registerUser(taxRateDTO: CreateTaxRateDTO) {
+    suspend fun registerTaxRate(taxRateDTO: CreateTaxRateDTO) {
         repository.createTaxRate(taxRateDTO.id)
     }
 
