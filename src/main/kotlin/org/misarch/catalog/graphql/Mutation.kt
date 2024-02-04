@@ -83,4 +83,22 @@ class Mutation(
         return numericalCategoryCharacteristic.toDTO() as NumericalCategoryCharacteristic
     }
 
+    @GraphQLDescription("Update a product")
+    suspend fun updateProduct(
+        @GraphQLDescription("Input for the updateProduct mutation")
+        input: UpdateProductInput
+    ): Product {
+        val product = productService.updateProduct(input)
+        return product.toDTO()
+    }
+
+    @GraphQLDescription("Update a product variant")
+    suspend fun updateProductVariant(
+        @GraphQLDescription("Input for the updateProductVariant mutation")
+        input: UpdateProductVariantInput
+    ): ProductVariant {
+        val productVariant = productVariantService.updateProductVariant(input)
+        return productVariant.toDTO()
+    }
+
 }

@@ -5,6 +5,7 @@ import org.misarch.catalog.event.CatalogEvents
 import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateProductVariantInput
 import org.misarch.catalog.graphql.input.ProductVariantInput
+import org.misarch.catalog.graphql.input.UpdateProductVariantInput
 import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
@@ -68,6 +69,21 @@ class ProductVariantService(
         savedProductVariant.currentVersion = initialVersion.id!!
         val newSavedProductVariant = repository.save(savedProductVariant).awaitSingle()
         return Pair(newSavedProductVariant, initialVersion)
+    }
+
+    /**
+     * Updates a product variant
+     *
+     * @param input defines the product to be updated
+     * @return the updated product variant
+     */
+    suspend fun updateProductVariant(input: UpdateProductVariantInput): ProductVariantEntity {
+        val productVariant = repository.findById(input.id).awaitSingle()
+        if (input.isPubliclyVisible != null) {
+            productVariant.isPubliclyVisible = input.isPubliclyVisible
+        }
+        val savedProductVariant = repository.save(productVariant).awaitSingle()
+        return savedProductVariant
     }
 
 }
