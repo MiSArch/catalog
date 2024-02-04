@@ -8,8 +8,10 @@ import org.misarch.catalog.graphql.input.ProductVariantVersionInput
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
 import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
+import org.misarch.catalog.persistence.model.TaxRateEntity
 import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.misarch.catalog.persistence.repository.ProductVariantVersionRepository
+import org.misarch.catalog.persistence.repository.TaxRateRepository
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 import java.util.*
@@ -19,6 +21,7 @@ import java.util.*
  *
  * @param repository the provided repository
  * @property productVariantRepository repository for [ProductVariantEntity]s
+ * @property taxRateRepository repository for [TaxRateEntity]s
  * @property categoryCharacteristicValueService service for [CategoryCharacteristicValueEntity]s
  * @property eventPublisher publisher for events
  */
@@ -26,6 +29,7 @@ import java.util.*
 class ProductVariantVersionService(
     repository: ProductVariantVersionRepository,
     private val productVariantRepository: ProductVariantRepository,
+    private val taxRateRepository: TaxRateRepository,
     private val categoryCharacteristicValueService: CategoryCharacteristicValueService,
     private val eventPublisher: EventPublisher
 ) : BaseService<ProductVariantVersionEntity, ProductVariantVersionRepository>(repository) {
@@ -57,6 +61,9 @@ class ProductVariantVersionService(
     suspend fun createProductVariantVersionInternal(
         input: ProductVariantVersionInput, productVariantId: UUID
     ): ProductVariantVersionEntity {
+        if (!taxRateRepository.existsById(input.taxRateId).awaitSingle()) {
+            throw IllegalArgumentException("Tax rate with id ${input.taxRateId} does not exist")
+        }
         val version = repository.findMaxVersionByProductVariantId(productVariantId)?.plus(1) ?: 1
         val productVariantVersion = ProductVariantVersionEntity(
             name = input.name,
@@ -66,6 +73,7 @@ class ProductVariantVersionService(
             createdAt = OffsetDateTime.now(),
             canBeReturnedForDays = input.canBeReturnedForDays,
             productVariantId = productVariantId,
+            taxRateId = input.taxRateId,
             id = null
         )
         val savedProductVariantVersion = repository.save(productVariantVersion).awaitSingle()

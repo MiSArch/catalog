@@ -20,6 +20,11 @@ object CatalogEvents {
     const val PRODUCT_VARIANT_VERSION_CREATED = "product-variant-version/created"
 
     /**
+     * Topic for tax rate creation events
+     */
+    const val TAX_RATE_CREATED = "tax/tax-rate/created"
+
+    /**
      * Name of the pubsub component
      */
     const val PUBSUB_NAME = "pubsub"

@@ -1,6 +1,7 @@
 package org.misarch.catalog.graphql.input
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import java.util.UUID
 
 @GraphQLDescription("Input for creating a ProductVariantVersion.")
 open class ProductVariantVersionInput(
@@ -15,5 +16,7 @@ open class ProductVariantVersionInput(
     @property:GraphQLDescription("The CategoricalCategoryCharacteristicValues of the ProductVariant, must be compatible with the Categories of the associated Product.")
     val categoricalCharacteristicValues: List<CategoricalCategoryCharacteristicValueInput>,
     @property:GraphQLDescription("The NumericalCategoryCharacteristicValues of the ProductVariant, must be compatible with the Categories of the associated Product.")
-    val numericalCharacteristicValues: List<NumericalCategoryCharacteristicValueInput>
+    val numericalCharacteristicValues: List<NumericalCategoryCharacteristicValueInput>,
+    @property:GraphQLDescription("The associated TaxRate")
+    val taxRateId: UUID
 )

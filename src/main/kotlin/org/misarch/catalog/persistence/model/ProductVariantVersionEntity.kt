@@ -29,6 +29,7 @@ class ProductVariantVersionEntity(
     val createdAt: OffsetDateTime,
     val canBeReturnedForDays: Double?,
     val productVariantId: UUID,
+    val taxRateId: UUID,
     @Id
     override val id: UUID?
 ) : BaseEntity<ProductVariantVersion> {
@@ -49,7 +50,8 @@ class ProductVariantVersionEntity(
             retailPrice = retailPrice,
             createdAt = createdAt,
             canBeReturnedForDays = canBeReturnedForDays,
-            productVariantId = productVariantId
+            productVariantId = productVariantId,
+            taxRateId = taxRateId
         )
     }
 

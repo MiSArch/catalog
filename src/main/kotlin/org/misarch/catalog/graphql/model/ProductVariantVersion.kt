@@ -6,6 +6,7 @@ import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
+import org.misarch.catalog.graphql.dataloader.TaxRateDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
@@ -32,7 +33,8 @@ class ProductVariantVersion(
     val createdAt: OffsetDateTime,
     @property:GraphQLDescription("The amount of days for which an instance of the ProductVariantVersion can be returned after purchase")
     val canBeReturnedForDays: Double?,
-    private val productVariantId: UUID
+    private val productVariantId: UUID,
+    private val taxRateId: UUID
 ) : Node(id) {
 
     @GraphQLDescription("The ProductVariant this is a version of.")
@@ -62,6 +64,14 @@ class ProductVariantVersion(
             orderBy,
             categoryCharacteristicValueRepository
         )
+    }
+
+    @GraphQLDescription("The associated TaxRate.")
+    fun taxRate(
+        dfe: DataFetchingEnvironment
+    ): CompletableFuture<TaxRate> {
+        return dfe.getDataLoader<UUID, TaxRate>(TaxRateDataLoader::class.simpleName!!)
+            .load(taxRateId, dfe)
     }
 
 }
