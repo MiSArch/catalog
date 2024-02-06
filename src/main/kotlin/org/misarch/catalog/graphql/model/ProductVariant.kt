@@ -11,6 +11,8 @@ import org.misarch.catalog.graphql.model.connection.ProductVariantVersionConnect
 import org.misarch.catalog.graphql.model.connection.ProductVariantVersionOrder
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.ProductVariantVersionRepository
+import org.misarch.user.graphql.authorizedUser
+import org.misarch.user.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -35,6 +37,9 @@ class ProductVariant(
     fun currentVersion(
         dfe: DataFetchingEnvironment
     ): CompletableFuture<ProductVariantVersion> {
+        if (!this.isPubliclyVisible) {
+            dfe.authorizedUser.checkIsEmployee()
+        }
         return dfe.getDataLoader<UUID, ProductVariantVersion>(ProductVariantVersionDataLoader::class.simpleName!!)
             .load(currentVersion, dfe)
     }
@@ -49,14 +54,17 @@ class ProductVariant(
         orderBy: ProductVariantVersionOrder? = null,
         @GraphQLIgnore
         @Autowired
-        productVariantVersionRepository: ProductVariantVersionRepository
+        productVariantVersionRepository: ProductVariantVersionRepository,
+        dfe: DataFetchingEnvironment
     ): ProductVariantVersionConnection {
+        dfe.authorizedUser.checkIsEmployee()
         return ProductVariantVersionConnection(
             first,
             skip,
             ProductVariantVersionEntity.ENTITY.productVariantId.eq(id),
             orderBy,
-            productVariantVersionRepository
+            productVariantVersionRepository,
+            dfe.authorizedUserOrNull
         )
     }
 

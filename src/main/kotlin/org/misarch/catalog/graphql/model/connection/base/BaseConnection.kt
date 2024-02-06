@@ -6,12 +6,14 @@ import com.infobip.spring.data.r2dbc.QuerydslR2dbcRepository
 import com.querydsl.core.types.Ops.AggOps
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.sql.RelationalPathBase
 import com.querydsl.sql.SQLQuery
 import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.persistence.model.BaseEntity
+import org.misarch.user.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection that is backed by a QueryDSL repository
@@ -30,10 +32,12 @@ import org.misarch.catalog.persistence.model.BaseEntity
 abstract class BaseConnection<T, D : BaseEntity<T>>(
     private val first: Int?,
     private val skip: Int?,
-    private val predicate: Predicate?,
+    private val filter: BaseFilter?,
+    private val predicate: BooleanExpression?,
     private val order: Array<OrderSpecifier<*>>,
     private val repository: QuerydslR2dbcRepository<D, *>,
     private val entity: RelationalPathBase<*>,
+    protected val authorizedUser: AuthorizedUser?,
     private val applyJoin: (query: SQLQuery<*>) -> SQLQuery<*> = { it }
 ) {
 
@@ -50,8 +54,9 @@ abstract class BaseConnection<T, D : BaseEntity<T>>(
                 it.select(Expressions.numberOperation(Long::class.javaObjectType, AggOps.COUNT_AGG, primaryKey))
                     .from(entity)
             val joinedQuery = applyJoin(baseQuery) as SQLQuery<Long>
-            if (predicate != null) {
-                joinedQuery.where(predicate)
+            val condition = buildCondition()
+            if (condition != null) {
+                joinedQuery.where(condition)
             } else {
                 joinedQuery
             }
@@ -64,8 +69,9 @@ abstract class BaseConnection<T, D : BaseEntity<T>>(
         return repository.query {
             val baseQuery = it.select(repository.entityProjection()).from(entity)
             val joinedQuery = applyJoin(baseQuery) as SQLQuery<D>
-            if (predicate != null) {
-                joinedQuery.where(predicate)
+            val condition = buildCondition()
+            if (condition != null) {
+                joinedQuery.where(condition)
             } else {
                 joinedQuery
             }.orderBy(*order).offset(skip?.toLong() ?: 0).limit(first?.toLong() ?: Long.MAX_VALUE)
@@ -80,12 +86,36 @@ abstract class BaseConnection<T, D : BaseEntity<T>>(
         return repository.query {
             val baseQuery = it.select(repository.entityProjection()).from(entity)
             val joinedQuery = applyJoin(baseQuery)
-            if (predicate != null) {
-                joinedQuery.where(predicate)
+            val condition = buildCondition()
+            if (condition != null) {
+                joinedQuery.where(condition)
             } else {
                 joinedQuery
             }.offset(first.toLong() + (skip ?: 0)).limit(1)
         }.all().hasElements().awaitSingle()
+    }
+
+    /**
+     * Applies filtering based on the authorized user
+     *
+     * @return The predicate to filter the items by
+     */
+    internal open fun authorizedUserFilter(): BooleanExpression? {
+        return null
+    }
+
+    /**
+     * Builds the combined condition for the query
+     *
+     * @return The combined condition
+     */
+    private fun buildCondition(): BooleanExpression? {
+        val conditions = listOfNotNull(
+            predicate,
+            filter?.toExpression(),
+            authorizedUserFilter()
+        )
+        return conditions.reduceOrNull { acc, condition -> acc.and(condition) }
     }
 
 }

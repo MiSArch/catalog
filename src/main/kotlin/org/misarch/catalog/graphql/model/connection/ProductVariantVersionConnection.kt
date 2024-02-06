@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
 import org.misarch.catalog.graphql.model.ProductVariantVersion
@@ -13,6 +14,7 @@ import org.misarch.catalog.graphql.model.connection.base.BaseOrderField
 import org.misarch.catalog.graphql.model.connection.base.OrderDirection
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.ProductVariantVersionRepository
+import org.misarch.user.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection for [ProductVariantVersion]s.
@@ -22,6 +24,7 @@ import org.misarch.catalog.persistence.repository.ProductVariantVersionRepositor
  * @param predicate The predicate to filter the items by
  * @param order The order to sort the items by
  * @param repository The repository to fetch the items from
+ * @param authorizedUser The authorized user
  * @param applyJoin A function to apply a join to the query
  */
 @GraphQLDescription("A connection to a list of `ProductVariantVersion` values.")
@@ -29,17 +32,20 @@ import org.misarch.catalog.persistence.repository.ProductVariantVersionRepositor
 class ProductVariantVersionConnection(
     first: Int?,
     skip: Int?,
-    predicate: Predicate?,
+    predicate: BooleanExpression?,
     order: ProductVariantVersionOrder?,
     repository: ProductVariantVersionRepository,
+    authorizedUser: AuthorizedUser?,
     applyJoin: (query: SQLQuery<*>) -> SQLQuery<*> = { it }
 ) : BaseConnection<ProductVariantVersion, ProductVariantVersionEntity>(
     first,
     skip,
+    null,
     predicate,
     (order ?: ProductVariantVersionOrder.DEFAULT).toOrderSpecifier(ProductVariantVersionOrderField.ID),
     repository,
     ProductVariantVersionEntity.ENTITY,
+    authorizedUser,
     applyJoin
 ) {
 

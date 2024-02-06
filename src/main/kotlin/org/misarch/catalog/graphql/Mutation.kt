@@ -2,9 +2,11 @@ package org.misarch.catalog.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
+import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.input.*
 import org.misarch.catalog.graphql.model.*
 import org.misarch.catalog.service.*
+import org.misarch.user.graphql.authorizedUser
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -31,8 +33,10 @@ class Mutation(
     @GraphQLDescription("Create a new product")
     suspend fun createProduct(
         @GraphQLDescription("Input for the createProduct mutation")
-        input: CreateProductInput
+        input: CreateProductInput,
+        dfe: DataFetchingEnvironment
     ): Product {
+        dfe.authorizedUser.checkIsEmployee()
         val product = productService.createProduct(input)
         return product.toDTO()
     }
@@ -40,8 +44,10 @@ class Mutation(
     @GraphQLDescription("Create a new product variant")
     suspend fun createProductVariant(
         @GraphQLDescription("Input for the createProductVariant mutation")
-        input: CreateProductVariantInput
+        input: CreateProductVariantInput,
+        dfe: DataFetchingEnvironment
     ): ProductVariant {
+        dfe.authorizedUser.checkIsEmployee()
         val productVariant = productVariantService.createProductVariant(input)
         return productVariant.toDTO()
     }
@@ -49,8 +55,10 @@ class Mutation(
     @GraphQLDescription("Create a new product variant version")
     suspend fun createProductVariantVersion(
         @GraphQLDescription("Input for the createProductVariantVersion mutation")
-        input: CreateProductVariantVersionInput
+        input: CreateProductVariantVersionInput,
+        dfe: DataFetchingEnvironment
     ): ProductVariantVersion {
+        dfe.authorizedUser.checkIsEmployee()
         val product = productVariantVersionService.createProductVariantVersion(input)
         return product.toDTO()
     }
@@ -58,8 +66,10 @@ class Mutation(
     @GraphQLDescription("Create a new category")
     suspend fun createCategory(
         @GraphQLDescription("Input for the createCategory mutation")
-        input: CreateCategoryInput
+        input: CreateCategoryInput,
+        dfe: DataFetchingEnvironment
     ): Category {
+        dfe.authorizedUser.checkIsEmployee()
         val category = categoryService.createCategory(input)
         return category.toDTO()
     }
@@ -67,8 +77,10 @@ class Mutation(
     @GraphQLDescription("Create a new value for a characteristic whose values have no further meaning")
     suspend fun createCategoricalCategoryCharacteristic(
         @GraphQLDescription("Input for the createCategoricalCategoryCharacteristic mutation")
-        input: CreateCategoricalCategoryCharacteristicInput
+        input: CreateCategoricalCategoryCharacteristicInput,
+        dfe: DataFetchingEnvironment
     ): CategoricalCategoryCharacteristic {
+        dfe.authorizedUser.checkIsEmployee()
         val categoricalCategoryCharacteristic =
             categoryCharacteristicService.createCategoricalCategoryCharacteristic(input)
         return categoricalCategoryCharacteristic.toDTO() as CategoricalCategoryCharacteristic
@@ -77,8 +89,10 @@ class Mutation(
     @GraphQLDescription("Create a new numerical category characteristic")
     suspend fun createNumericalCategoryCharacteristic(
         @GraphQLDescription("Input for the createNumericalCategoryCharacteristic mutation")
-        input: CreateNumericalCategoryCharacteristicInput
+        input: CreateNumericalCategoryCharacteristicInput,
+        dfe: DataFetchingEnvironment
     ): NumericalCategoryCharacteristic {
+        dfe.authorizedUser.checkIsEmployee()
         val numericalCategoryCharacteristic = categoryCharacteristicService.createNumericalCategoryCharacteristic(input)
         return numericalCategoryCharacteristic.toDTO() as NumericalCategoryCharacteristic
     }
@@ -86,8 +100,10 @@ class Mutation(
     @GraphQLDescription("Update a product")
     suspend fun updateProduct(
         @GraphQLDescription("Input for the updateProduct mutation")
-        input: UpdateProductInput
+        input: UpdateProductInput,
+        dfe: DataFetchingEnvironment
     ): Product {
+        dfe.authorizedUser.checkIsEmployee()
         val product = productService.updateProduct(input)
         return product.toDTO()
     }
@@ -95,8 +111,10 @@ class Mutation(
     @GraphQLDescription("Update a product variant")
     suspend fun updateProductVariant(
         @GraphQLDescription("Input for the updateProductVariant mutation")
-        input: UpdateProductVariantInput
+        input: UpdateProductVariantInput,
+        dfe: DataFetchingEnvironment
     ): ProductVariant {
+        dfe.authorizedUser.checkIsEmployee()
         val productVariant = productVariantService.updateProductVariant(input)
         return productVariant.toDTO()
     }

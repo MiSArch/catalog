@@ -21,7 +21,7 @@ import java.util.*
  * @param skip The number of items to skip
  * @param order The order to sort the items by
  * @param repository The repository to fetch the items from
- * @param applyJoin A function to apply a join to the query
+ * @param characteristicId The id of the characteristic to fetch the values for
  */
 @GraphQLDescription("A connection to a list of `CategoricalCategoryCharacteristicValue` values.")
 @ShareableDirective

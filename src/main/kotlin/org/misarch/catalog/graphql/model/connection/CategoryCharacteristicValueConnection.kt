@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
 import org.misarch.catalog.graphql.model.CategoryCharacteristicValue
@@ -13,6 +14,7 @@ import org.misarch.catalog.graphql.model.connection.base.BaseOrderField
 import org.misarch.catalog.graphql.model.connection.base.OrderDirection
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
+import org.misarch.user.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection for [CategoryCharacteristicValue]s.
@@ -22,6 +24,7 @@ import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRep
  * @param predicate The predicate to filter the items by
  * @param order The order to sort the items by
  * @param repository The repository to fetch the items from
+ * @param authorizedUser The authorized user
  * @param applyJoin A function to apply a join to the query
  */
 @GraphQLDescription("A connection to a list of `CategoryCharacteristicValue` values.")
@@ -29,17 +32,20 @@ import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRep
 class CategoryCharacteristicValueConnection(
     first: Int?,
     skip: Int?,
-    predicate: Predicate?,
+    predicate: BooleanExpression?,
     order: CategoryCharacteristicValueOrder?,
     repository: CategoryCharacteristicValueRepository,
+    authorizedUser: AuthorizedUser?,
     applyJoin: (query: SQLQuery<*>) -> SQLQuery<*> = { it }
 ) : BaseConnection<CategoryCharacteristicValue, CategoryCharacteristicValueEntity>(
     first,
     skip,
+    null,
     predicate,
     (order ?: CategoryCharacteristicValueOrder.DEFAULT).toOrderSpecifier(CategoryCharacteristicValueOrderField.ID),
     repository,
     CategoryCharacteristicValueEntity.ENTITY,
+    authorizedUser,
     applyJoin
 ) {
 
