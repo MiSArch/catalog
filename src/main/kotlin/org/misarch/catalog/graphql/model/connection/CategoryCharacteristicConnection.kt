@@ -3,7 +3,7 @@ package org.misarch.catalog.graphql.model.connection
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Expression
-import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
 import org.misarch.catalog.graphql.model.CategoryCharacteristic
@@ -13,6 +13,7 @@ import org.misarch.catalog.graphql.model.connection.base.BaseOrderField
 import org.misarch.catalog.graphql.model.connection.base.OrderDirection
 import org.misarch.catalog.persistence.model.CategoryCharacteristicEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
+import org.misarch.catalog.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection for [CategoryCharacteristic]s.
@@ -22,6 +23,7 @@ import org.misarch.catalog.persistence.repository.CategoryCharacteristicReposito
  * @param predicate The predicate to filter the items by
  * @param order The order to sort the items by
  * @param repository The repository to fetch the items from
+ * @param authorizedUser The authorized user
  * @param applyJoin A function to apply a join to the query
  */
 @GraphQLDescription("A connection to a list of `CategoryCharacteristic` values.")
@@ -29,17 +31,20 @@ import org.misarch.catalog.persistence.repository.CategoryCharacteristicReposito
 class CategoryCharacteristicConnection(
     first: Int?,
     skip: Int?,
-    predicate: Predicate?,
+    predicate: BooleanExpression?,
     order: CategoryCharacteristicOrder?,
     repository: CategoryCharacteristicRepository,
+    authorizedUser: AuthorizedUser?,
     applyJoin: (query: SQLQuery<*>) -> SQLQuery<*> = { it }
 ) : BaseConnection<CategoryCharacteristic, CategoryCharacteristicEntity>(
     first,
     skip,
+    null,
     predicate,
     (order ?: CategoryCharacteristicOrder.DEFAULT).toOrderSpecifier(CategoryCharacteristicOrderField.ID),
     repository,
     CategoryCharacteristicEntity.ENTITY,
+    authorizedUser,
     applyJoin
 ) {
 

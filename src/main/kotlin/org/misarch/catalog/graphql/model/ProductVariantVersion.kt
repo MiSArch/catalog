@@ -10,8 +10,8 @@ import org.misarch.catalog.graphql.dataloader.TaxRateDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
-import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.util.*
@@ -55,14 +55,16 @@ class ProductVariantVersion(
         orderBy: CategoryCharacteristicValueOrder? = null,
         @GraphQLIgnore
         @Autowired
-        categoryCharacteristicValueRepository: CategoryCharacteristicValueRepository
+        categoryCharacteristicValueRepository: CategoryCharacteristicValueRepository,
+        dfe: DataFetchingEnvironment
     ): CategoryCharacteristicValueConnection {
         return CategoryCharacteristicValueConnection(
             first,
             skip,
             CategoryCharacteristicValueEntity.ENTITY.productVariantVersionId.eq(id),
             orderBy,
-            categoryCharacteristicValueRepository
+            categoryCharacteristicValueRepository,
+            dfe.authorizedUserOrNull
         )
     }
 

@@ -3,7 +3,7 @@ package org.misarch.catalog.graphql.model.connection
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Expression
-import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.sql.SQLQuery
 import org.misarch.catalog.graphql.model.Category
@@ -13,6 +13,7 @@ import org.misarch.catalog.graphql.model.connection.base.BaseOrderField
 import org.misarch.catalog.graphql.model.connection.base.OrderDirection
 import org.misarch.catalog.persistence.model.CategoryEntity
 import org.misarch.catalog.persistence.repository.CategoryRepository
+import org.misarch.catalog.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection for [Category]s.
@@ -29,17 +30,20 @@ import org.misarch.catalog.persistence.repository.CategoryRepository
 class CategoryConnection(
     first: Int?,
     skip: Int?,
-    predicate: Predicate?,
+    predicate: BooleanExpression?,
     order: CategoryOrder?,
     repository: CategoryRepository,
+    authorizedUser: AuthorizedUser?,
     applyJoin: (query: SQLQuery<*>) -> SQLQuery<*> = { it }
 ) : BaseConnection<Category, CategoryEntity>(
     first,
     skip,
+    null,
     predicate,
     (order ?: CategoryOrder.DEFAULT).toOrderSpecifier(CategoryOrderField.ID),
     repository,
     CategoryEntity.ENTITY,
+    authorizedUser,
     applyJoin
 ) {
 

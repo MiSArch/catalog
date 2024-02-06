@@ -4,15 +4,14 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
-import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicConnection
-import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicOrder
-import org.misarch.catalog.graphql.model.connection.ProductConnection
-import org.misarch.catalog.graphql.model.connection.ProductOrder
+import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.model.connection.*
 import org.misarch.catalog.persistence.model.CategoryCharacteristicEntity
 import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.model.ProductToCategoryEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -34,12 +33,15 @@ class Category(
         skip: Int? = null,
         @GraphQLDescription("Ordering")
         orderBy: ProductOrder? = null,
+        @GraphQLDescription("Filtering")
+        filter: ProductFilter? = null,
         @GraphQLIgnore
         @Autowired
-        productRepository: ProductRepository
+        productRepository: ProductRepository,
+        dfe: DataFetchingEnvironment
     ): ProductConnection {
         return ProductConnection(
-            first, skip, ProductToCategoryEntity.ENTITY.categoryId.eq(id), orderBy, productRepository
+            first, skip, filter, ProductToCategoryEntity.ENTITY.categoryId.eq(id), orderBy, productRepository, dfe.authorizedUserOrNull
         ) {
             it.innerJoin(ProductToCategoryEntity.ENTITY)
                 .on(ProductToCategoryEntity.ENTITY.productId.eq(ProductEntity.ENTITY.id))
@@ -56,14 +58,16 @@ class Category(
         orderBy: CategoryCharacteristicOrder? = null,
         @GraphQLIgnore
         @Autowired
-        categoryCharacteristicsRepository: CategoryCharacteristicRepository
+        categoryCharacteristicsRepository: CategoryCharacteristicRepository,
+        dfe: DataFetchingEnvironment
     ): CategoryCharacteristicConnection {
         return CategoryCharacteristicConnection(
             first,
             skip,
             CategoryCharacteristicEntity.ENTITY.categoryId.eq(id),
             orderBy,
-            categoryCharacteristicsRepository
+            categoryCharacteristicsRepository,
+            dfe.authorizedUserOrNull
         )
     }
 

@@ -9,10 +9,7 @@ import org.misarch.catalog.graphql.dataloader.ProductDataLoader
 import org.misarch.catalog.graphql.model.Category
 import org.misarch.catalog.graphql.model.CategoryCharacteristic
 import org.misarch.catalog.graphql.model.Product
-import org.misarch.catalog.graphql.model.connection.CategoryConnection
-import org.misarch.catalog.graphql.model.connection.CategoryOrder
-import org.misarch.catalog.graphql.model.connection.ProductConnection
-import org.misarch.catalog.graphql.model.connection.ProductOrder
+import org.misarch.catalog.graphql.model.connection.*
 import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
 import org.springframework.stereotype.Component
@@ -38,9 +35,12 @@ class Query(
         @GraphQLDescription("Number of items to skip")
         skip: Int? = null,
         @GraphQLDescription("Ordering")
-        orderBy: ProductOrder? = null
+        orderBy: ProductOrder? = null,
+        @GraphQLDescription("Filtering")
+        filter: ProductFilter? = null,
+        dfe: DataFetchingEnvironment
     ): ProductConnection {
-        return ProductConnection(first, skip, null, orderBy, productRepository)
+        return ProductConnection(first, skip, filter, null, orderBy, productRepository, dfe.authorizedUserOrNull)
     }
 
     @GraphQLDescription("Get all categories")
@@ -50,9 +50,10 @@ class Query(
         @GraphQLDescription("Number of items to skip")
         skip: Int? = null,
         @GraphQLDescription("Ordering")
-        orderBy: CategoryOrder? = null
+        orderBy: CategoryOrder? = null,
+        dfe: DataFetchingEnvironment
     ): CategoryConnection {
-        return CategoryConnection(first, skip, null, orderBy, categoryRepository)
+        return CategoryConnection(first, skip, null, orderBy, categoryRepository, dfe.authorizedUserOrNull)
     }
 
     @GraphQLDescription("Get a product by id")
@@ -61,7 +62,12 @@ class Query(
         id: UUID,
         dfe: DataFetchingEnvironment
     ): CompletableFuture<Product> {
-        return dfe.getDataLoader<UUID, Product>(ProductDataLoader::class.simpleName!!).load(id)
+        return dfe.getDataLoader<UUID, Product>(ProductDataLoader::class.simpleName!!).load(id).thenApply {
+            if (!it.isPubliclyVisible) {
+                dfe.authorizedUser.checkIsEmployee()
+            }
+            it
+        }
     }
 
     @GraphQLDescription("Get a category by id")

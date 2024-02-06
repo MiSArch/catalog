@@ -6,15 +6,14 @@ import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
-import org.misarch.catalog.graphql.model.connection.CategoryConnection
-import org.misarch.catalog.graphql.model.connection.CategoryOrder
-import org.misarch.catalog.graphql.model.connection.ProductVariantConnection
-import org.misarch.catalog.graphql.model.connection.ProductVariantOrder
+import org.misarch.catalog.graphql.model.connection.*
 import org.misarch.catalog.persistence.model.CategoryEntity
 import org.misarch.catalog.persistence.model.ProductToCategoryEntity
 import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductVariantRepository
+import org.misarch.catalog.graphql.authorizedUser
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -33,6 +32,9 @@ class Product(
     fun defaultVariant(
         dfe: DataFetchingEnvironment
     ): CompletableFuture<ProductVariant> {
+        if (!this.isPubliclyVisible) {
+            dfe.authorizedUser.checkIsEmployee()
+        }
         return dfe.getDataLoader<UUID, ProductVariant>(ProductVariantDataLoader::class.simpleName!!)
             .load(defaultVariantId, dfe)
     }
@@ -45,12 +47,18 @@ class Product(
         skip: Int? = null,
         @GraphQLDescription("Ordering")
         orderBy: ProductVariantOrder? = null,
+        @GraphQLDescription("Filtering")
+        filter: ProductVariantFilter? = null,
         @GraphQLIgnore
         @Autowired
-        productVariantRepository: ProductVariantRepository
+        productVariantRepository: ProductVariantRepository,
+        dfe: DataFetchingEnvironment
     ): ProductVariantConnection {
+        if (!this.isPubliclyVisible) {
+            dfe.authorizedUser.checkIsEmployee()
+        }
         return ProductVariantConnection(
-            first, skip, ProductVariantEntity.ENTITY.productId.eq(id), orderBy, productVariantRepository
+            first, skip, filter, ProductVariantEntity.ENTITY.productId.eq(id), orderBy, productVariantRepository, dfe.authorizedUserOrNull
         )
     }
 
@@ -64,10 +72,11 @@ class Product(
         orderBy: CategoryOrder? = null,
         @GraphQLIgnore
         @Autowired
-        categoryRepository: CategoryRepository
+        categoryRepository: CategoryRepository,
+        dfe: DataFetchingEnvironment
     ): CategoryConnection {
         return CategoryConnection(
-            first, skip, ProductToCategoryEntity.ENTITY.productId.eq(id), orderBy, categoryRepository
+            first, skip, ProductToCategoryEntity.ENTITY.productId.eq(id), orderBy, categoryRepository, dfe.authorizedUserOrNull
         ) {
             it.innerJoin(ProductToCategoryEntity.ENTITY)
                 .on(ProductToCategoryEntity.ENTITY.categoryId.eq(CategoryEntity.ENTITY.id))
