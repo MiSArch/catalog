@@ -47,6 +47,9 @@ class ProductVariantVersionService(
             throw IllegalArgumentException("Product variant with id ${input.productVariantId} does not exist.")
         }
         val productVariantVersion = createProductVariantVersionInternal(input, input.productVariantId)
+        val productVariant = productVariantRepository.findById(input.productVariantId).awaitSingle()
+        productVariant.currentVersion = productVariantVersion.id!!
+        productVariantRepository.save(productVariant).awaitSingle()
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, productVariantVersion.toEventDTO())
         return productVariantVersion
     }
