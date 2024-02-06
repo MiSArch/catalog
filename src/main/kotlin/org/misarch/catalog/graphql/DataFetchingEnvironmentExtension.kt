@@ -1,4 +1,4 @@
-package org.misarch.user.graphql
+package org.misarch.catalog.graphql
 
 import graphql.schema.DataFetchingEnvironment
 

@@ -6,7 +6,6 @@ import graphql.schema.DataFetchingEnvironment
 import org.misarch.catalog.graphql.input.*
 import org.misarch.catalog.graphql.model.*
 import org.misarch.catalog.service.*
-import org.misarch.user.graphql.authorizedUser
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional

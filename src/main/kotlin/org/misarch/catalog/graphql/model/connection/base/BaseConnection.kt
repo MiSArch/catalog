@@ -5,7 +5,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.infobip.spring.data.r2dbc.QuerydslR2dbcRepository
 import com.querydsl.core.types.Ops.AggOps
 import com.querydsl.core.types.OrderSpecifier
-import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.Expressions
@@ -13,7 +12,7 @@ import com.querydsl.sql.RelationalPathBase
 import com.querydsl.sql.SQLQuery
 import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.persistence.model.BaseEntity
-import org.misarch.user.graphql.AuthorizedUser
+import org.misarch.catalog.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection that is backed by a QueryDSL repository

@@ -11,8 +11,8 @@ import org.misarch.catalog.graphql.model.connection.ProductVariantVersionConnect
 import org.misarch.catalog.graphql.model.connection.ProductVariantVersionOrder
 import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.ProductVariantVersionRepository
-import org.misarch.user.graphql.authorizedUser
-import org.misarch.user.graphql.authorizedUserOrNull
+import org.misarch.catalog.graphql.authorizedUser
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import java.util.concurrent.CompletableFuture

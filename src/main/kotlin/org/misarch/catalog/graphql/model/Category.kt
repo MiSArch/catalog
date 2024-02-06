@@ -11,7 +11,7 @@ import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.model.ProductToCategoryEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
-import org.misarch.user.graphql.authorizedUserOrNull
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 

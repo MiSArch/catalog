@@ -10,9 +10,8 @@ import org.misarch.catalog.graphql.dataloader.TaxRateDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
-import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
-import org.misarch.user.graphql.authorizedUserOrNull
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.util.*

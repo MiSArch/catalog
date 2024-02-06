@@ -12,8 +12,6 @@ import org.misarch.catalog.graphql.model.Product
 import org.misarch.catalog.graphql.model.connection.*
 import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
-import org.misarch.user.graphql.authorizedUser
-import org.misarch.user.graphql.authorizedUserOrNull
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.CompletableFuture

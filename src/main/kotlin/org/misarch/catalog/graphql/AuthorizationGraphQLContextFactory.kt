@@ -1,4 +1,4 @@
-package org.misarch.user.graphql
+package org.misarch.catalog.graphql
 
 import com.expediagroup.graphql.generator.extensions.plus
 import com.expediagroup.graphql.server.spring.execution.DefaultSpringGraphQLContextFactory

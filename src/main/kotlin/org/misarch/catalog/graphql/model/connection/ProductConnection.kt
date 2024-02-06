@@ -3,7 +3,6 @@ package org.misarch.catalog.graphql.model.connection
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.ShareableDirective
 import com.querydsl.core.types.Expression
-import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.ComparableExpression
 import com.querydsl.core.types.dsl.Expressions
@@ -12,7 +11,7 @@ import org.misarch.catalog.graphql.model.Product
 import org.misarch.catalog.graphql.model.connection.base.*
 import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.repository.ProductRepository
-import org.misarch.user.graphql.AuthorizedUser
+import org.misarch.catalog.graphql.AuthorizedUser
 
 /**
  * A GraphQL connection for [Product]s.
