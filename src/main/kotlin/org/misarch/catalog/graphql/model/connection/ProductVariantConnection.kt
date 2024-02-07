@@ -9,7 +9,6 @@ import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.sql.SQLQuery
 import org.misarch.catalog.graphql.model.ProductVariant
 import org.misarch.catalog.graphql.model.connection.base.*
-import org.misarch.catalog.persistence.model.ProductEntity
 import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.misarch.catalog.graphql.AuthorizedUser
@@ -55,7 +54,7 @@ class ProductVariantConnection(
         return if (authorizedUser?.isEmployee == true) {
             null
         } else {
-            ProductEntity.ENTITY.isPubliclyVisible.eq(Expressions.TRUE)
+            ProductVariantEntity.ENTITY.isPubliclyVisible.eq(Expressions.TRUE)
         }
     }
 }
