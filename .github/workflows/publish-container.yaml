@@ -10,7 +10,7 @@ on:
     branches:
       - "main"
 
-concurrency: ${{ github.workflow }}
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   REGISTRY: ghcr.io
