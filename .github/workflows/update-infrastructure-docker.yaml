@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+concurrency: ${{ github.workflow }}
+
 jobs:
   schema:
     name: Update infrastructure-docker submodule
