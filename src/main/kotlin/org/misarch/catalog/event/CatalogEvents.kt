@@ -7,17 +7,17 @@ object CatalogEvents {
     /**
      * Topic for product creation events
      */
-    const val PRODUCT_CREATED = "product/created"
+    const val PRODUCT_CREATED = "catalog/product/created"
 
     /**
      * Topic for product variant creation events
      */
-    const val PRODUCT_VARIANT_CREATED = "product-variant/created"
+    const val PRODUCT_VARIANT_CREATED = "catalog/product-variant/created"
 
     /**
      * Topic for product variant version creation events
      */
-    const val PRODUCT_VARIANT_VERSION_CREATED = "product-variant-version/created"
+    const val PRODUCT_VARIANT_VERSION_CREATED = "catalog/product-variant-version/created"
 
     /**
      * Topic for tax rate creation events
