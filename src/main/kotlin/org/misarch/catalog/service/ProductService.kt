@@ -12,6 +12,7 @@ import org.misarch.catalog.persistence.model.ProductVariantEntity
 import org.misarch.catalog.persistence.repository.CategoryRepository
 import org.misarch.catalog.persistence.repository.ProductRepository
 import org.misarch.catalog.persistence.repository.ProductToCategoryRepository
+import org.misarch.catalog.persistence.repository.ProductVariantRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -22,6 +23,7 @@ import java.util.*
  * @property productVariantService service for [ProductVariantEntity]s
  * @property productToCategoryRepository repository for [ProductToCategoryEntity]s
  * @property categoryRepository repository for [CategoryEntity]s
+ * @property productVariantRepository repository for [ProductVariantEntity]s
  * @property eventPublisher publisher for events
  */
 @Service
@@ -30,7 +32,8 @@ class ProductService(
     private val productVariantService: ProductVariantService,
     private val productToCategoryRepository: ProductToCategoryRepository,
     private val categoryRepository: CategoryRepository,
-    private val eventPublisher: EventPublisher
+    private val productVariantRepository: ProductVariantRepository,
+    private val eventPublisher: EventPublisher,
 ) : BaseService<ProductEntity, ProductRepository>(repository) {
 
     /**
@@ -71,7 +74,15 @@ class ProductService(
         if (input.internalName != null) {
             product.internalName = input.internalName
         }
+        if (input.defaultVariantId != null) {
+            val variant = productVariantRepository.findById(input.defaultVariantId).awaitSingle()
+            if (variant.productId != product.id) {
+                throw IllegalArgumentException("Variant with id ${input.defaultVariantId} does not belong to product with id ${product.id}.")
+            }
+            product.defaultVariantId = input.defaultVariantId
+        }
         val savedProduct = repository.save(product).awaitSingle()
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_UPDATED, savedProduct.toEventDTO())
         return savedProduct
     }
 

@@ -1,6 +1,6 @@
 package org.misarch.catalog.persistence.model
 
-import org.misarch.catalog.event.model.ProductVariantDTO
+import org.misarch.catalog.event.model.CreatedProductVariantDTO
 import org.misarch.catalog.graphql.model.ProductVariant
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
@@ -44,8 +44,8 @@ class ProductVariantEntity(
      *
      * @return event DTO
      */
-    fun toEventDTO(): ProductVariantDTO {
-        return ProductVariantDTO(
+    fun toEventDTO(): CreatedProductVariantDTO {
+        return CreatedProductVariantDTO(
             id = id!!,
             productId = productId,
             currentVersionId = currentVersion!!,

@@ -1,6 +1,5 @@
 package org.misarch.catalog.event.model
 
-import java.time.OffsetDateTime
 import java.util.UUID
 
 /**

@@ -11,4 +11,6 @@ class UpdateProductInput(
     val isPubliclyVisible: Boolean?,
     @property:GraphQLDescription("If present, new value for internalName")
     val internalName: String?,
+    @property:GraphQLDescription("If present, new value for defaultVariantId")
+    val defaultVariantId: UUID?
 )

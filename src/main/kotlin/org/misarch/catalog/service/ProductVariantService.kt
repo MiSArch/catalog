@@ -3,6 +3,7 @@ package org.misarch.catalog.service
 import kotlinx.coroutines.reactor.awaitSingle
 import org.misarch.catalog.event.CatalogEvents
 import org.misarch.catalog.event.EventPublisher
+import org.misarch.catalog.event.model.UpdatedProductVariantDTO
 import org.misarch.catalog.graphql.input.CreateProductVariantInput
 import org.misarch.catalog.graphql.input.ProductVariantInput
 import org.misarch.catalog.graphql.input.UpdateProductVariantInput
@@ -54,7 +55,10 @@ class ProductVariantService(
      * @param productId the id of the product
      * @return the created product variant and the initial version
      */
-    suspend fun createProductVariantInternal(input: ProductVariantInput, productId: UUID): Pair<ProductVariantEntity, ProductVariantVersionEntity> {
+    suspend fun createProductVariantInternal(
+        input: ProductVariantInput,
+        productId: UUID
+    ): Pair<ProductVariantEntity, ProductVariantVersionEntity> {
         val productVariant = ProductVariantEntity(
             isPubliclyVisible = input.isPubliclyVisible,
             productId = productId,
@@ -83,6 +87,10 @@ class ProductVariantService(
             productVariant.isPubliclyVisible = input.isPubliclyVisible
         }
         val savedProductVariant = repository.save(productVariant).awaitSingle()
+        eventPublisher.publishEvent(
+            CatalogEvents.PRODUCT_VARIANT_UPDATED,
+            UpdatedProductVariantDTO(savedProductVariant.id!!, savedProductVariant.isPubliclyVisible)
+        )
         return savedProductVariant
     }
 
