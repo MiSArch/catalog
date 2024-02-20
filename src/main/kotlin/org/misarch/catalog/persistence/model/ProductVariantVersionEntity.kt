@@ -69,7 +69,8 @@ class ProductVariantVersionEntity(
             retailPrice = retailPrice,
             createdAt = createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
             canBeReturnedForDays = canBeReturnedForDays,
-            productVariantId = productVariantId
+            productVariantId = productVariantId,
+            taxRateId = taxRateId
         )
     }
 
