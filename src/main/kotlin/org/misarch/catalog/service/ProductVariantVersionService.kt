@@ -77,6 +77,7 @@ class ProductVariantVersionService(
             canBeReturnedForDays = input.canBeReturnedForDays,
             productVariantId = productVariantId,
             taxRateId = input.taxRateId,
+            weight = input.weight,
             id = null
         )
         val savedProductVariantVersion = repository.save(productVariantVersion).awaitSingle()

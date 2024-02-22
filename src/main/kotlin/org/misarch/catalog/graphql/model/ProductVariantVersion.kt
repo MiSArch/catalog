@@ -33,6 +33,8 @@ class ProductVariantVersion(
     val createdAt: OffsetDateTime,
     @property:GraphQLDescription("The amount of days for which an instance of the ProductVariantVersion can be returned after purchase")
     val canBeReturnedForDays: Double?,
+    @property:GraphQLDescription("The weight of the ProductVariantVersion.")
+    val weight: Double,
     private val productVariantId: UUID,
     private val taxRateId: UUID
 ) : Node(id) {
