@@ -13,7 +13,8 @@ class CreateProductVariantVersionInput(
     canBeReturnedForDays: Double? = null,
     categoricalCharacteristicValues: List<CategoricalCategoryCharacteristicValueInput>,
     numericalCharacteristicValues: List<NumericalCategoryCharacteristicValueInput>,
-    taxRateId: UUID
+    taxRateId: UUID,
+    weight: Double
 ) : ProductVariantVersionInput(
     name,
     description,
@@ -21,5 +22,6 @@ class CreateProductVariantVersionInput(
     canBeReturnedForDays,
     categoricalCharacteristicValues,
     numericalCharacteristicValues,
-    taxRateId
+    taxRateId,
+    weight
 )

@@ -18,5 +18,7 @@ open class ProductVariantVersionInput(
     @property:GraphQLDescription("The NumericalCategoryCharacteristicValues of the ProductVariant, must be compatible with the Categories of the associated Product.")
     val numericalCharacteristicValues: List<NumericalCategoryCharacteristicValueInput>,
     @property:GraphQLDescription("The associated TaxRate")
-    val taxRateId: UUID
+    val taxRateId: UUID,
+    @property:GraphQLDescription("The weight of a single instance of the ProductVariant.")
+    val weight: Double
 )

@@ -14,6 +14,7 @@ import java.util.UUID
  * @property canBeReturnedForDays number of days the product variant version can be returned, null if it cannot be returned
  * @property productVariantId id of the referenced product variant
  * @property taxRateId id of the referenced tax rate
+ * @property weight weight of the product variant version
  */
 data class ProductVariantVersionDTO(
     val id: UUID,
@@ -24,5 +25,6 @@ data class ProductVariantVersionDTO(
     val createdAt: String,
     val canBeReturnedForDays: Double?,
     val productVariantId: UUID,
-    val taxRateId: UUID
+    val taxRateId: UUID,
+    val weight: Double
 )
