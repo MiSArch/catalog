@@ -42,14 +42,16 @@ class ProductEntity(
     /**
      * Converts the entity to an event DTO
      *
+     * @param categoryIds ids of the referenced categories
      * @return event DTO
      */
-    fun toEventDTO(): ProductDTO {
+    fun toEventDTO(categoryIds: Set<UUID>): ProductDTO {
         return ProductDTO(
             id = id!!,
             internalName = internalName,
             isPubliclyVisible = isPubliclyVisible,
-            defaultVariantId = defaultVariantId!!
+            defaultVariantId = defaultVariantId!!,
+            categoryIds = categoryIds.toList()
         )
     }
 
