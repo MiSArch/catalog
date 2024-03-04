@@ -54,7 +54,7 @@ class ProductService(
         val (productVariant, initialVersion) = productVariantService.createProductVariantInternal(input.defaultVariant, savedProduct.id!!)
         savedProduct.defaultVariantId = productVariant.id
         val newSavedProduct =  repository.save(savedProduct).awaitSingle()
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_CREATED, newSavedProduct.toEventDTO())
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_CREATED, newSavedProduct.toEventDTO(input.categoryIds.toSet()))
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
         return newSavedProduct
@@ -82,7 +82,8 @@ class ProductService(
             product.defaultVariantId = input.defaultVariantId
         }
         val savedProduct = repository.save(product).awaitSingle()
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_UPDATED, savedProduct.toEventDTO())
+        val categoryIds = productToCategoryRepository.findByProductId(savedProduct.id!!).map { it.categoryId }
+        eventPublisher.publishEvent(CatalogEvents.PRODUCT_UPDATED, savedProduct.toEventDTO(categoryIds.toSet()))
         return savedProduct
     }
 
