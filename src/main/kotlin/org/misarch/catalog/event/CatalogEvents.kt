@@ -20,6 +20,11 @@ object CatalogEvents {
     const val PRODUCT_VARIANT_VERSION_CREATED = "catalog/product-variant-version/created"
 
     /**
+     * Topic for category creation events
+     */
+    const val CATEGORY_CREATED = "catalog/category/created"
+
+    /**
      * Topic for product update events
      */
     const val PRODUCT_UPDATED = "catalog/product/updated"
