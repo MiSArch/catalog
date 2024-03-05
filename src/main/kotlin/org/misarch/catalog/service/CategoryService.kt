@@ -1,6 +1,8 @@
 package org.misarch.catalog.service
 
 import kotlinx.coroutines.reactor.awaitSingle
+import org.misarch.catalog.event.CatalogEvents
+import org.misarch.catalog.event.EventPublisher
 import org.misarch.catalog.graphql.input.CreateCategoryInput
 import org.misarch.catalog.persistence.model.CategoryCharacteristicEntity
 import org.misarch.catalog.persistence.model.CategoryEntity
@@ -13,10 +15,13 @@ import org.springframework.stereotype.Service
  *
  * @param repository the provided repository
  * @property categoryCharacteristicService service for [CategoryCharacteristicEntity]s
+ * @property eventPublisher publisher for events
  */
 @Service
 class CategoryService(
-    repository: CategoryRepository, private val categoryCharacteristicService: CategoryCharacteristicService
+    repository: CategoryRepository,
+    private val categoryCharacteristicService: CategoryCharacteristicService,
+    private val eventPublisher: EventPublisher
 ) : BaseService<CategoryEntity, CategoryRepository>(repository) {
 
     /**
@@ -43,6 +48,7 @@ class CategoryService(
         input.numericalCharacteristics.forEach {
             categoryCharacteristicService.createNumericalCategoryCharacteristicInternal(it, id)
         }
+        eventPublisher.publishEvent(CatalogEvents.CATEGORY_CREATED, savedCategory.toEventDTO())
         return savedCategory
     }
 
