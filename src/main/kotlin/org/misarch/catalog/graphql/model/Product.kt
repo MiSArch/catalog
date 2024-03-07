@@ -22,11 +22,17 @@ import java.util.concurrent.CompletableFuture
 @KeyDirective(fields = FieldSet("id"))
 class Product(
     id: UUID,
-    @property:GraphQLDescription("An internal name to identify the Product, not visible to customers.")
-    val internalName: String,
+    private val internalName: String,
     @property:GraphQLDescription("If true, the Product is visible to customers.")
-    val isPubliclyVisible: Boolean, private val defaultVariantId: UUID
+    val isPubliclyVisible: Boolean,
+    private val defaultVariantId: UUID
 ) : Node(id) {
+
+    @GraphQLDescription("An internal name to identify the Product, not visible to customers.")
+    fun internalName(dfe: DataFetchingEnvironment): String {
+        dfe.authorizedUser.checkIsEmployee()
+        return internalName
+    }
 
     @GraphQLDescription("The default variant of the product.")
     fun defaultVariant(
