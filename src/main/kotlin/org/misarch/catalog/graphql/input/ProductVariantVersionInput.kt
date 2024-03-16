@@ -11,8 +11,8 @@ open class ProductVariantVersionInput(
     val description: String,
     @property:GraphQLDescription("The retail price of the ProductVariant.")
     val retailPrice: Int,
-    @property:GraphQLDescription("The amount of days for which an instance of the ProductVariant can be returned after purchase")
-    val canBeReturnedForDays: Double? = null,
+    @property:GraphQLDescription("The amount of days for which an instance of the ProductVariant can be returned after purchase, if null can be returned indefinitely.")
+    val canBeReturnedForDays: Int?,
     @property:GraphQLDescription("The CategoricalCategoryCharacteristicValues of the ProductVariant, must be compatible with the Categories of the associated Product.")
     val categoricalCharacteristicValues: List<CategoricalCategoryCharacteristicValueInput>,
     @property:GraphQLDescription("The NumericalCategoryCharacteristicValues of the ProductVariant, must be compatible with the Categories of the associated Product.")
