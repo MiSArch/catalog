@@ -1,6 +1,6 @@
 # Catalog Service
 
-The catalog service consists of the bounded contexts `Catalog`, `Category`, and `CategoryValue`.
+The catalog service consists of the bounded contexts `Product`, `Category`, and `CategoryValue`.
 It is responsible for managing products, their variants and versions, categories, and their respective characteristics and values.
 
 ## Documentation
