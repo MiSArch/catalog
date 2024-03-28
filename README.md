@@ -18,4 +18,4 @@ docker-compose -f docker-compose.dev.yml up --build
 A GraphiQL interface is available at http://localhost:8080/graphiql to interact with the service.
 
 > [!NOTE]
-> Running the service locally through the IDE is neigher recommended nor supported.
+> Running the service locally through the IDE is neither recommended nor supported.
