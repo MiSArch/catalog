@@ -40,6 +40,11 @@ object CatalogEvents {
     const val TAX_RATE_CREATED = "tax/tax-rate/created"
 
     /**
+     * Topic for media creation events
+     */
+    const val MEDIA_CREATED = "media/media/created"
+
+    /**
      * Name of the pubsub component
      */
     const val PUBSUB_NAME = "pubsub"

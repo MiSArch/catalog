@@ -15,6 +15,7 @@ import java.util.UUID
  * @property productVariantId id of the referenced product variant
  * @property taxRateId id of the referenced tax rate
  * @property weight weight of the product variant version
+ * @property mediaIds list of media ids associated with the product variant version
  */
 data class ProductVariantVersionDTO(
     val id: UUID,
@@ -26,5 +27,6 @@ data class ProductVariantVersionDTO(
     val canBeReturnedForDays: Int?,
     val productVariantId: UUID,
     val taxRateId: UUID,
-    val weight: Double
+    val weight: Double,
+    val mediaIds: List<UUID>
 )

@@ -44,7 +44,10 @@ class ProductVariantService(
         }
         val (productVariant, initialVersion) = createProductVariantInternal(input, input.productId)
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
+        eventPublisher.publishEvent(
+            CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED,
+            initialVersion.toEventDTO(input.initialVersion.mediaIds.toSet())
+        )
         return productVariant
     }
 
