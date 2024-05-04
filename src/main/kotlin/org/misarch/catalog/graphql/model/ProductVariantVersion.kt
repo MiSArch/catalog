@@ -13,8 +13,7 @@ import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueO
 import org.misarch.catalog.graphql.model.connection.MediaConnection
 import org.misarch.catalog.graphql.model.connection.base.CommonOrder
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
-import org.misarch.catalog.persistence.model.CategoryEntity
-import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
+import org.misarch.catalog.persistence.model.MediaEntity
 import org.misarch.catalog.persistence.model.ProductVariantVersionToMediaEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
 import org.misarch.catalog.persistence.repository.MediaRepository
@@ -105,7 +104,7 @@ class ProductVariantVersion(
             dfe.authorizedUserOrNull
         ) {
             it.innerJoin(ProductVariantVersionToMediaEntity.ENTITY)
-                .on(ProductVariantVersionToMediaEntity.ENTITY.productVariantVersionId.eq(ProductVariantVersionEntity.ENTITY.id))
+                .on(ProductVariantVersionToMediaEntity.ENTITY.mediaId.eq(MediaEntity.ENTITY.id))
         }
     }
 
