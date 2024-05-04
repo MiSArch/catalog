@@ -20,5 +20,7 @@ open class ProductVariantVersionInput(
     @property:GraphQLDescription("The associated TaxRate")
     val taxRateId: UUID,
     @property:GraphQLDescription("The weight of a single instance of the ProductVariant.")
-    val weight: Double
+    val weight: Double,
+    @property:GraphQLDescription("The associated Media files.")
+    val mediaIds: List<UUID>
 )

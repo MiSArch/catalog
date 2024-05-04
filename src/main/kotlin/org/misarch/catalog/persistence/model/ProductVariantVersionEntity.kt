@@ -60,9 +60,10 @@ class ProductVariantVersionEntity(
     /**
      * Converts the entity to an event DTO
      *
+     * @param mediaIds list of media ids associated with the product variant version
      * @return event DTO
      */
-    fun toEventDTO(): ProductVariantVersionDTO {
+    fun toEventDTO(mediaIds: Set<UUID>): ProductVariantVersionDTO {
         return ProductVariantVersionDTO(
             id = id!!,
             name = name,
@@ -73,7 +74,8 @@ class ProductVariantVersionEntity(
             canBeReturnedForDays = canBeReturnedForDays,
             productVariantId = productVariantId,
             taxRateId = taxRateId,
-            weight = weight
+            weight = weight,
+            mediaIds = mediaIds.toList()
         )
     }
 

@@ -14,7 +14,8 @@ class CreateProductVariantVersionInput(
     categoricalCharacteristicValues: List<CategoricalCategoryCharacteristicValueInput>,
     numericalCharacteristicValues: List<NumericalCategoryCharacteristicValueInput>,
     taxRateId: UUID,
-    weight: Double
+    weight: Double,
+    mediaIds: List<UUID>
 ) : ProductVariantVersionInput(
     name,
     description,
@@ -23,5 +24,6 @@ class CreateProductVariantVersionInput(
     categoricalCharacteristicValues,
     numericalCharacteristicValues,
     taxRateId,
-    weight
+    weight,
+    mediaIds
 )

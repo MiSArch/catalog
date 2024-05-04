@@ -5,13 +5,19 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import graphql.schema.DataFetchingEnvironment
+import org.misarch.catalog.graphql.authorizedUserOrNull
 import org.misarch.catalog.graphql.dataloader.ProductVariantDataLoader
 import org.misarch.catalog.graphql.dataloader.TaxRateDataLoader
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueConnection
 import org.misarch.catalog.graphql.model.connection.CategoryCharacteristicValueOrder
+import org.misarch.catalog.graphql.model.connection.MediaConnection
+import org.misarch.catalog.graphql.model.connection.base.CommonOrder
 import org.misarch.catalog.persistence.model.CategoryCharacteristicValueEntity
+import org.misarch.catalog.persistence.model.CategoryEntity
+import org.misarch.catalog.persistence.model.ProductVariantVersionEntity
+import org.misarch.catalog.persistence.model.ProductVariantVersionToMediaEntity
 import org.misarch.catalog.persistence.repository.CategoryCharacteristicValueRepository
-import org.misarch.catalog.graphql.authorizedUserOrNull
+import org.misarch.catalog.persistence.repository.MediaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.util.*
@@ -74,8 +80,33 @@ class ProductVariantVersion(
     fun taxRate(
         dfe: DataFetchingEnvironment
     ): CompletableFuture<TaxRate> {
-        return dfe.getDataLoader<UUID, TaxRate>(TaxRateDataLoader::class.simpleName!!)
-            .load(taxRateId, dfe)
+        return dfe.getDataLoader<UUID, TaxRate>(TaxRateDataLoader::class.simpleName!!).load(taxRateId, dfe)
+    }
+
+    @GraphQLDescription("Get all associated Medias")
+    suspend fun medias(
+        @GraphQLDescription("Number of items to return")
+        first: Int? = null,
+        @GraphQLDescription("Number of items to skip")
+        skip: Int? = null,
+        @GraphQLDescription("Ordering")
+        orderBy: CommonOrder? = null,
+        @GraphQLIgnore
+        @Autowired
+        mediaRepository: MediaRepository,
+        dfe: DataFetchingEnvironment
+    ): MediaConnection {
+        return MediaConnection(
+            first,
+            skip,
+            ProductVariantVersionToMediaEntity.ENTITY.productVariantVersionId.eq(id),
+            orderBy,
+            mediaRepository,
+            dfe.authorizedUserOrNull
+        ) {
+            it.innerJoin(ProductVariantVersionToMediaEntity.ENTITY)
+                .on(ProductVariantVersionToMediaEntity.ENTITY.productVariantVersionId.eq(ProductVariantVersionEntity.ENTITY.id))
+        }
     }
 
 }

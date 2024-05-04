@@ -51,12 +51,19 @@ class ProductService(
         )
         val savedProduct = repository.save(product).awaitSingle()
         addCategories(savedProduct, input.categoryIds)
-        val (productVariant, initialVersion) = productVariantService.createProductVariantInternal(input.defaultVariant, savedProduct.id!!)
+        val (productVariant, initialVersion) = productVariantService.createProductVariantInternal(
+            input.defaultVariant, savedProduct.id!!
+        )
         savedProduct.defaultVariantId = productVariant.id
-        val newSavedProduct =  repository.save(savedProduct).awaitSingle()
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_CREATED, newSavedProduct.toEventDTO(input.categoryIds.toSet()))
+        val newSavedProduct = repository.save(savedProduct).awaitSingle()
+        eventPublisher.publishEvent(
+            CatalogEvents.PRODUCT_CREATED, newSavedProduct.toEventDTO(input.categoryIds.toSet())
+        )
         eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_CREATED, productVariant.toEventDTO())
-        eventPublisher.publishEvent(CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED, initialVersion.toEventDTO())
+        eventPublisher.publishEvent(
+            CatalogEvents.PRODUCT_VARIANT_VERSION_CREATED,
+            initialVersion.toEventDTO(input.defaultVariant.initialVersion.mediaIds.toSet())
+        )
         return newSavedProduct
     }
 
@@ -95,15 +102,11 @@ class ProductService(
      */
     private suspend fun addCategories(product: ProductEntity, categoryIds: List<UUID>) {
         checkCategoriesExist(categoryIds)
-        productToCategoryRepository.saveAll(
-            categoryIds.map { categoryId ->
-                ProductToCategoryEntity(
-                    productId = product.id!!,
-                    categoryId = categoryId,
-                    id = null
-                )
-            }
-        ).collectList().awaitSingle()
+        productToCategoryRepository.saveAll(categoryIds.map { categoryId ->
+            ProductToCategoryEntity(
+                productId = product.id!!, categoryId = categoryId, id = null
+            )
+        }).collectList().awaitSingle()
     }
 
     /**
